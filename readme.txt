@@ -14,7 +14,7 @@ This plugin is a rewrite of a JavaScript snippet called PhotoNav. It provides fo
 
 Suitable panorama pictures can be created e.g. using the [Hugin](http://hugin.sourceforge.net/) panorama photo stitcher.
 
-*Until a first major release, I want to encourage everyone to respond to my call for comments concerning this plugin on the plugin homepage. Although my website is mainly in German, the plugin homepage will be kept in English and I hope, so will your posts.*
+*Until a first major release, I want to encourage everyone to respond to my call for comments concerning this plugin on the [plugin homepage](http://www.fabianmoser.at/wp-photonav). Although my website is mainly in German, the plugin homepage will be kept in English and I hope, so will your posts.*
 
 == Installation ==
 
