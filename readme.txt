@@ -5,7 +5,6 @@ Tags: photo, picture, panorama, photonav, jquery, scroll
 Requires at least: 2.8
 Tested up to: 2.8
 Stable tag: 0.2
-Text Domain: wp-photonav
 
 Provides a scrolling field without scrollbars for pictures with huge horizontal dimensions. Especially usefull for panorama pictures.
 
