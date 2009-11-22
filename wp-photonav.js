@@ -1,11 +1,10 @@
 /*
  * 	PhotoNavigation for WordPress
  * 	
- * 	Version 0.1
- * 	Date: 09-07-17
+ * 	Version 0.2
+ * 	Date: 09-11-22
  * 
  */
-
 
 /*  Credits:
  *
@@ -16,71 +15,47 @@
  * 
  */
  
-function PhotoNav_addStatus(str) 
-{
-	if (this.debugging == true) 
-	{
-		this.statusArr.unshift(str);
-		this.statusArr.splice(3, 10);
-		jQuery("#status").html("");
-		for (var i = 2; i > 0; i = i - 1) 
-		{
-			jQuery("#status").html(this.statusArr[i] + "<br />" + jQuery("#status").html());
-		}
-	}
-}
-	
-function PhotoNav_posPicture(x)
-{
-	var full = this.photoWidth;
-	full = full - this.containerWidth;
-	var curX = full * (x / 100);
-	if (curX < 0) curX = 0;
-	this.addStatus("Mouse X container: " + curX);
-	this.photo.css({
-		'marginLeft': '-' + curX + 'px'
-	});
-}
-
-function photoNavMouseMove(event)
+/*
+ * This event handler processes mousemove events if the element is in the "move" mode.
+ * The handler is attached to the container element. 
+ * 
+ * Requires the photoWidth as input.
+ */
+function containerMouseMove(event)
 {
 	var x = event.pageX - this.offsetLeft;
 	var y = event.pageY - this.offsetTop;
-	var perc = (100 / (this.photoNav.containerWidth / x));
-	this.photoNav.posPicture(perc);
-	this.photoNav.addStatus('X: ' + x + '  Y:' + y + ' ' + perc + '%');
+	var curX = (event.data.photo.offsetWidth - this.offsetWidth) / (this.offsetWidth / x);
+	var curY = (event.data.photo.offsetHeight - this.offsetHeight) / (this.offsetHeight / y);
+	if (curX < 0) curX = 0;
+	if (curY < 0) curY = 0;
+	event.data.photo.style.marginLeft = "-" + curX + "px";
+	event.data.photo.style.marginTop = "-" + curY + "px";
 }
 
-function PhotoNav(id, containerWidth, photoWidth, debugging)
+function containerReady(obj, mode)
 {
-	this.statusArr = new Array();
-	//make room in status array
-	this.statusArr[0] = "";
-	this.statusArr[1] = "";
-	this.photo = "";
-	this.container = "";
-	
-	this.id = id;
-	this.containerWidth = containerWidth;
-	this.photoWidth = photoWidth;
-	this.debugging = false;
-	
-	this.addStatus = PhotoNav_addStatus;
-	this.posPicture = PhotoNav_posPicture;
-	
-	//catch undefined vars
-	if (typeof(debugging) != 'undefined') 
-	{
-		this.debugging = debugging;
+	if (mode == "drag") {
+		var $photo = obj.children(".photo");
+		var $constraints = [0,0,0,0];
+		$constraints[0] = obj.width() - $photo.width() + obj.offset().left;
+		$constraints[1] = obj.height() - $photo.height() + obj.offset().top;
+		$constraints[2] = obj.offset().left;
+		$constraints[3] = obj.offset().top;		
+		$photo.draggable({ containment: $constraints });	
+	}	
+	else if (mode == "move") {
+		obj.bind("mousemove", {photo: obj.children(".photo")[0]}, containerMouseMove);
+	}
+}
+
+function createPhotoNav(id, mode)
+{
+	if (mode != "drag") {
+		mode = "move";
 	}
 	
-	var photoNav = this;
-	jQuery("#" + id).each(function(i) {
-		this.photoNav = photoNav;
-		jQuery(this).mousemove(photoNavMouseMove);
-	});
-	
-	jQuery("#" + id + " .photo").each(function(i) {
-		photoNav.photo = jQuery(this);
-	});
+	var container = jQuery("#" + id);
+	container.css({ "display": "block" }); 
+	container.ready(containerReady(container, mode));
 }
