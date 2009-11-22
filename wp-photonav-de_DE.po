@@ -28,6 +28,9 @@ msgstr "ID"
 msgid "Panorama URL"
 msgstr "Panorama URL"
 
+msgid "Mode"
+msgstr "Modus"
+
 #: wp-photonav.php:179
 msgid "Container width"
 msgstr "Rahmenbreite"
@@ -37,8 +40,11 @@ msgid "Photo width"
 msgstr "Aufnahmebreite"
 
 #: wp-photonav.php:197
-msgid "Height"
-msgstr "Höhe"
+msgid "Container height"
+msgstr "Rahmenhöhe"
+
+msgid "Photo height"
+msgstr "Aufnahmehöhe"
 
 #: wp-photonav.php:207
 msgid "Insert into Post"

@@ -4,7 +4,7 @@ Donate link:
 Tags: photo, picture, panorama, photonav, jquery, scroll
 Requires at least: 2.8
 Tested up to: 2.8
-Stable tag: 0.2
+Stable tag: 0.3
 
 Provides a scrolling field without scrollbars for pictures with huge horizontal dimensions. Especially usefull for panorama pictures.
 
@@ -21,14 +21,18 @@ Suitable panorama pictures can be created e.g. using the [Hugin](http://hugin.so
 3. Upload a panorama picture and note the dimensions
 4. Include PhotoNav in your post by entering `[photonav id='panorama' url='/wp-content/uploads/2009/07/panorama.jpg' container_width=400 photo_width=3000 height=200]`. Remember to use **unique** id strings and note that the image will be cropped (not scaled) to the given sizes.
 
-== Version History ==
+== Changelog ==
 
-= Version 0.2 =
+= 0.3 =
+* Adds drag support: when adding shortcode option mode='drag', the panorama can be rotated by dragging it.
+* Adds vertical scroll support for both, traditional 'move' and 'drag' modes. This is activated by using the container_height and photo_height shortcode options, where obviously container_height must be smaller
+
+= 0.2 =
 * Changes php source structure to object orientation
 * Panorama media button as a simple shortcode helper
 * I18n
 
-= Version 0.1 =
+= 0.1 =
 * Initial release.
 * Shortcode ability
 
