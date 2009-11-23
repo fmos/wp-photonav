@@ -6,7 +6,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: WP-PhotoNav 0.2\n"
+"Project-Id-Version: WP-PhotoNav 0.3\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-photonav\n"
 "POT-Creation-Date: 2009-09-12 18:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -16,52 +16,46 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: wp-photonav.php:110
 msgid "Saved."
 msgstr ""
 
-#: wp-photonav.php:163
 msgid "ID"
 msgstr ""
 
-#: wp-photonav.php:172
 msgid "Panorama URL"
 msgstr ""
 
-#: wp-photonav.php:179
-msgid "Container width"
-msgstr ""
+msgid "Mode"
+msgstr "Modus"
 
-#: wp-photonav.php:188
+msgid "Container width"
+msgstr "Rahmenbreite"
+
 msgid "Photo width"
 msgstr ""
 
-#: wp-photonav.php:197
-msgid "Height"
+msgid "Container height"
 msgstr ""
 
-#: wp-photonav.php:207
+msgid "Photo height"
+msgstr ""
+
 msgid "Insert into Post"
 msgstr ""
 
-#. Plugin Name of an extension
 msgid "WP-PhotoNav"
 msgstr ""
 
-#. Plugin URI of an extension
-msgid "http://www.fabianmoser.at/wp-photonav"
+msgid "http://fabianmoser.at/wp-photonav"
 msgstr ""
 
-#. Description of an extension
 msgid ""
 "Provides a scrolling field without scrollbars for huge pictures. Especially "
 "usefull for panorama pictures."
 msgstr ""
 
-#. Author of an extension
 msgid "Fabian Moser"
 msgstr ""
 
-#. Author URI of an extension
-msgid "http://www.fabianmoser.at"
+msgid "http://fabianmoser.at"
 msgstr ""
