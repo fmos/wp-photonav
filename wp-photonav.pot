@@ -1,0 +1,61 @@
+# LANGUAGE (LOCALE) translation for WP-PhotoNav.
+# Copyright (C) 2009 Fabian Moser
+# This file is distributed under the same license as the WP-PhotoNav package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: WP-PhotoNav 0.3\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-photonav\n"
+"POT-Creation-Date: 2009-09-12 18:56+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Saved."
+msgstr ""
+
+msgid "ID"
+msgstr ""
+
+msgid "Panorama URL"
+msgstr ""
+
+msgid "Mode"
+msgstr "Modus"
+
+msgid "Container width"
+msgstr "Rahmenbreite"
+
+msgid "Photo width"
+msgstr ""
+
+msgid "Container height"
+msgstr ""
+
+msgid "Photo height"
+msgstr ""
+
+msgid "Insert into Post"
+msgstr ""
+
+msgid "WP-PhotoNav"
+msgstr ""
+
+msgid "http://fabianmoser.at/wp-photonav"
+msgstr ""
+
+msgid ""
+"Provides a scrolling field without scrollbars for huge pictures. Especially "
+"usefull for panorama pictures."
+msgstr ""
+
+msgid "Fabian Moser"
+msgstr ""
+
+msgid "http://fabianmoser.at"
+msgstr ""
