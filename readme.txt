@@ -3,7 +3,7 @@ Contributors: fmos
 Donate link: 
 Tags: photo, picture, panorama, photonav, jquery, scroll
 Requires at least: 2.8
-Tested up to: 2.9
+Tested up to: 2.9.1
 Stable tag: 0.3
 
 Provides a scrolling field without scrollbars for pictures with huge horizontal dimensions. Especially usefull for panorama pictures.
