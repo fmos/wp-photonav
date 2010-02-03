@@ -23,8 +23,9 @@
  */
 function containerMouseMove(event)
 {
-	var x = event.pageX - this.offsetLeft;
-	var y = event.pageY - this.offsetTop;
+	var offset = event.data.container.offset();
+	var x = event.pageX - offset.left;
+	var y = event.pageY - offset.top;
 	var curX = (event.data.photo.offsetWidth - this.offsetWidth) / (this.offsetWidth / x);
 	var curY = (event.data.photo.offsetHeight - this.offsetHeight) / (this.offsetHeight / y);
 	if (curX < 0) curX = 0;
@@ -45,7 +46,7 @@ function containerReady(obj, mode)
 		$photo.draggable({ containment: $constraints });	
 	}	
 	else if (mode == "move") {
-		obj.bind("mousemove", {photo: obj.children(".photo")[0]}, containerMouseMove);
+		obj.bind("mousemove", {container: obj, photo: obj.children(".photo")[0]}, containerMouseMove);
 	}
 }
 
