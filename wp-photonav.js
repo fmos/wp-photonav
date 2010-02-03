@@ -1,8 +1,8 @@
 /*
  * 	PhotoNavigation for WordPress
  * 	
- * 	Version 0.3
- * 	Date: 09-11-22
+ * 	Version 0.4
+ * 	Date: 10-02-03
  * 
  */
 
