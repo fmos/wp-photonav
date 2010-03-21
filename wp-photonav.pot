@@ -6,7 +6,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: WP-PhotoNav 0.3\n"
+"Project-Id-Version: WP-PhotoNav 0.5\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-photonav\n"
 "POT-Creation-Date: 2009-09-12 18:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
