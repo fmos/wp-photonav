@@ -1,10 +1,10 @@
 === WP-PhotoNav ===
 Contributors: fmos
 Donate link: 
-Tags: photo, picture, panorama, photonav, jquery, scroll, 360
+Tags: panorama, image, photo, picture, photonav, jquery, scroll, 360
 Requires at least: 2.8
-Tested up to: 2.9.1
-Stable tag: 0.5
+Tested up to: 3.0-RC3
+Stable tag: 0.6
 
 Provides a scrolling field without scrollbars for pictures with huge horizontal dimensions. Especially usefull for panorama pictures.
 
@@ -19,9 +19,12 @@ Suitable panorama pictures can be created e.g. using the [Hugin](http://hugin.so
 1. Upload the wp-photonav directory to the `/wp-content/plugins/` directory
 2. Activate the plugin through the Plugins menu in WordPress
 3. Upload a panorama picture and note the dimensions
-4. Include PhotoNav in your post by entering `[photonav id='panorama' url='/wp-content/uploads/2009/07/panorama.jpg' container_width=400 photo_width=3000 height=200]`. Remember to use **unique** id strings and note that the image will be cropped (not scaled) to the given sizes.
+4. Include PhotoNav in your post by entering `[photonav id='panorama' url='/wp-content/uploads/2010/06/panorama.jpg' container_width=400 photo_width=3000 height=200]`. Remember to use **unique** id strings and note that the image will be cropped (not scaled) to the given sizes.
 
 == Changelog ==
+
+= 0.6 =
+* Bugfix: All Javascript code is now properly wrapped in a jQuery.ready handler. This resolves reported issues with the Mystique theme.
 
 = 0.5 =
 * Enhancement: Horizontal 360-degree panoramas (infinite scrolling) are now supported by the 'drag360' mode.

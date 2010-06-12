@@ -1,11 +1,12 @@
 <?php 
+// vim: ai ts=4 sts=4 et sw=4
 /*
  Plugin Name: WP-PhotoNav
- Plugin URI: http://fabianmoser.at/wp-photonav
+ Plugin URI: http://www.fabianmoser.at/wp-photonav
  Description: Provides a scrolling field without scrollbars for huge pictures. Especially usefull for panorama pictures.
- Version: 0.5
+ Version: 0.6
  Author: Fabian Moser
- Author URI: http://fabianmoser.at
+ Author URI: http://www.fabianmoser.at
  */
 
 if (!class_exists("PhotoNav")) {
@@ -168,7 +169,7 @@ if (!class_exists("PhotoNav")) {
             if (!in_array($a['mode'], $valid_modes)) {
                 $a['mode'] = 'move';
             }
-            $template_photonav = '<div class="photonav"><div class="container" style="width: %PHOTONAV_CONTAINERWIDTH%; height: %PHOTONAV_CONTAINERHEIGHT%;" id="%PHOTONAV_ID%"><div class="photo" style="width: %PHOTONAV_PHOTOWIDTH%; height: %PHOTONAV_PHOTOHEIGHT%; background-image: url(%PHOTONAV_URL%)"></div></div><script type="text/javascript">createPhotoNav("%PHOTONAV_ID%", "%PHOTONAV_MODE%");</script></div>';
+            $template_photonav = '<div class="photonav"><div class="container" style="width: %PHOTONAV_CONTAINERWIDTH%; height: %PHOTONAV_CONTAINERHEIGHT%;" id="%PHOTONAV_ID%"><div class="photo" style="width: %PHOTONAV_PHOTOWIDTH%; height: %PHOTONAV_PHOTOHEIGHT%; background-image: url(%PHOTONAV_URL%)"></div></div><script type="text/javascript">jQuery(document).ready(function($){createPhotoNav("%PHOTONAV_ID%","%PHOTONAV_MODE%");});</script></div>';
             $template_photonav = str_replace("%PHOTONAV_ID%", $a['id'], $template_photonav);
             $template_photonav = str_replace("%PHOTONAV_MODE%", $a['mode'], $template_photonav);
             $template_photonav = str_replace("%PHOTONAV_URL%", $a['url'], $template_photonav);
@@ -253,7 +254,7 @@ function type_url_form_photonav() {
 		<tr>
 			<td></td>
 			<td>
-				<input type="submit" class="button" name="insertonlybutton" value="' . esc_attr__('Insert into Post') . '" />
+				<input type="submit" class="button" name="insertonlybutton" value="' . esc_attr_e('Insert into Post') . '" />
 			</td>
 		</tr>
 	</tbody></table>
