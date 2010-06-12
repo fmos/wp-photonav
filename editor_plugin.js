@@ -59,9 +59,9 @@
 			return {
 				longname : 'WP-PhotoNav plugin',
 				author : 'Fabian Moser',
-				authorurl : 'http://fabianmoser.at',
-				infourl : 'http://fabianmoser.at/wp-photonav',
-				version : "0.3"
+				authorurl : 'http://www.fabianmoser.at',
+				infourl : 'http://www.fabianmoser.at/wp-photonav',
+				version : "0.6"
 			};
 		}
 	});

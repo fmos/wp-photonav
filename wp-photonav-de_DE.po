@@ -1,63 +1,49 @@
 # German (de_DE) translation for WP-PhotoNav.
-# Copyright (C) 2009 Fabian Moser
+# Copyright (C) 2009-2010 Fabian Moser
 # This file is distributed under the same license as the WP-PhotoNav package.
-# Fabian Moser, 2009.
+# Fabian Moser, 2010.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: WP-PhotoNav 0.3\n"
+"Project-Id-Version: WP-PhotoNav 0.6\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/wp-photonav\n"
 "POT-Creation-Date: 2009-09-12 18:56+0000\n"
-"PO-Revision-Date: 2009-11-23 10:10+0000\n"
+"PO-Revision-Date: 2010-06-12 15:34+0200\n"
 "Last-Translator: Fabian Moser\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: wp-photonav.php:117
 msgid "Saved."
 msgstr "Gespeichert."
 
+#: wp-photonav.php:198
 msgid "ID"
 msgstr "ID"
 
+#: wp-photonav.php:207
 msgid "Panorama URL"
 msgstr "Panorama URL"
 
+#: wp-photonav.php:214
 msgid "Mode"
 msgstr "Modus"
 
-msgid "Container width"
-msgstr "Rahmenbreite"
-
+#: wp-photonav.php:222
 msgid "Photo width"
 msgstr "Aufnahmebreite"
 
-msgid "Container height"
-msgstr "Rahmenhöhe"
+#: wp-photonav.php:231
+msgid "Container width"
+msgstr "Rahmenbreite"
 
+#: wp-photonav.php:239
 msgid "Photo height"
 msgstr "Aufnahmehöhe"
 
-msgid "Insert into Post"
-msgstr "In Beitrag einfügen"
-
-msgid "WP-PhotoNav"
-msgstr "WP-PhotoNav"
-
-msgid "http://fabianmoser.at/wp-photonav"
-msgstr "http://fabianmoser.at/wp-photonav"
-
-msgid ""
-"Provides a scrolling field without scrollbars for huge pictures. Especially "
-"usefull for panorama pictures."
-msgstr ""
-"Ermöglicht sehr breite Bilder ohne Scrollbars vertikal zu scrollen. "
-"Besonders nützlich für Panorama Aufnahmen."
-
-msgid "Fabian Moser"
-msgstr "Fabian Moser"
-
-msgid "http://fabianmoser.at"
-msgstr "http://fabianmoser.at"
+#: wp-photonav.php:248
+msgid "Container height"
+msgstr "Rahmenhöhe"

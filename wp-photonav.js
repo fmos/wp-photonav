@@ -1,8 +1,10 @@
+// vim: ai ts=4 sts=4 et sw=4
+
 /*
  * 	PhotoNavigation for WordPress
  * 	
- * 	Version 0.5
- * 	Date: 10-03-21
+ * 	Version 0.6
+ * 	Date: 10-06-12
  * 
  */
 
@@ -44,47 +46,68 @@ function photoDrag(event, ui)
     ui.position.left = ui.position.left % ui.helper.picture_width;
 }
 
-function containerReady(obj, mode)
+function initDrag(container)
 {
-    var photo = obj.children(".photo");
+    var photo = container.children(".photo");
     var constraints = [0,0,0,0];
-    if (mode == 'drag') {
-        constraints[0] = obj.width() - photo.width() + obj.offset().left;
-        constraints[1] = obj.height() - photo.height() + obj.offset().top;
-        constraints[2] = obj.offset().left;
-        constraints[3] = obj.offset().top;
-        photo.draggable({ containment: constraints });
-    }
-    else if (mode == 'drag360') {
-        constraints[0] = obj.offset().left - obj.width() - photo.width();
-        constraints[1] = obj.height() - photo.height() + obj.offset().top;
-        constraints[2] = obj.offset().left + photo.width();
-        constraints[3] = obj.offset().top;
-        var totalwidth = photo.width() + obj.width() + 2;
-        var photo_width = photo.width();
-        photo.css("width", totalwidth);
-        photo.draggable({
-            containment: constraints,
-            drag: function(e, ui) {
-                var newleft = ui.position.left % photo_width;
-                if (newleft > 0) {
-                    newleft -= photo_width;
-                }
-                ui.position.left = newleft;
-            }
-        });
-    }
-    else if (mode == 'move') {
-        obj.bind("mousemove", {
-            container: obj,
-            photo: obj.children(".photo")[0]
-        }, containerMouseMove);
-    }
+    constraints[0] = container.width() - photo.width() + container.offset().left;
+    constraints[1] = container.height() - photo.height() + container.offset().top;
+    constraints[2] = container.offset().left;
+    constraints[3] = container.offset().top;
+    photo.draggable({ containment: constraints });
 }
 
+function initDrag360(container)
+{
+    var photo = container.children(".photo");
+    var constraints = [0,0,0,0];
+    constraints[0] = container.offset().left - container.width() - photo.width();
+    constraints[1] = container.height() - photo.height() + container.offset().top;
+    constraints[2] = container.offset().left + photo.width();
+    constraints[3] = container.offset().top;
+    var totalwidth = photo.width() + container.width() + 2;
+    var photo_width = photo.width();
+    photo.css("width", totalwidth);
+    photo.draggable({
+        containment: constraints,
+        drag: function(e, ui) {
+            var newleft = ui.position.left % photo_width;
+            if (newleft > 0) {
+                newleft -= photo_width;
+            }
+            ui.position.left = newleft;
+        }
+    });
+}
+
+function initMove(container)
+{
+    var constraints = [0,0,0,0];
+    container.bind("mousemove", {
+        container: container,
+        photo: container.children(".photo")[0]
+    }, containerMouseMove);
+}
+
+/*
+ * Initialises the PhotoNav instance by calling the appropriate init method
+ * above depending on the mode parameter. An invalid mode selection will leave
+ * the PhotoNav instance hidden.
+ * (This is being called inside jQuery.ready)
+ */
 function createPhotoNav(id, mode)
 {
     var container = jQuery("#" + id);
-    container.css("display", "block");
-    container.ready(containerReady(container, mode));
+    if (mode == 'drag') {
+        container.css("display", "block"); // show PhotoNav instance
+        initDrag(container);
+    }
+    else if (mode == 'drag360') {
+        container.css("display", "block"); // show PhotoNav instance
+        initDrag360(container);
+    }
+    else if (mode == 'move') {
+        container.css("display", "block"); // show PhotoNav instance
+        initMove(container);
+    }
 }
