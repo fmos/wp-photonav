@@ -3,7 +3,7 @@ Contributors: fmos
 Donate link: 
 Tags: panorama, image, photo, picture, photonav, jquery, scroll, 360
 Requires at least: 2.8
-Tested up to: 3.0-RC3
+Tested up to: 3.0.1
 Stable tag: 0.6
 
 Provides a scrolling field without scrollbars for pictures with huge horizontal dimensions. Especially usefull for panorama pictures.
@@ -22,6 +22,9 @@ Suitable panorama pictures can be created e.g. using the [Hugin](http://hugin.so
 4. Include PhotoNav in your post by entering `[photonav id='panorama' url='/wp-content/uploads/2010/06/panorama.jpg' container_width=400 photo_width=3000 height=200]`. Remember to use **unique** id strings and note that the image will be cropped (not scaled) to the given sizes.
 
 == Changelog ==
+
+= 0.7 =
+* Feature: Support for popup display with ColorBox (similar to LightBox) when the jQuery Colorbox WordPress plugin is active
 
 = 0.6 =
 * Bugfix: All Javascript code is now properly wrapped in a jQuery.ready handler. This resolves reported issues with the Mystique theme.

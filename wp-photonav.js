@@ -3,8 +3,8 @@
 /*
  * 	PhotoNavigation for WordPress
  * 	
- * 	Version 0.6
- * 	Date: 10-06-12
+ * 	Version 0.7
+ * 	Date: 10-08-15
  * 
  */
 
@@ -82,7 +82,6 @@ function initDrag360(container)
 
 function initMove(container)
 {
-    var constraints = [0,0,0,0];
     container.bind("mousemove", {
         container: container,
         photo: container.children(".photo")[0]
@@ -95,9 +94,9 @@ function initMove(container)
  * the PhotoNav instance hidden.
  * (This is being called inside jQuery.ready)
  */
-function createPhotoNav(id, mode)
+function createPhotoNav(id, mode, popup)
 {
-    var container = jQuery("#" + id);
+    var container = jQuery(".container", "#" + id);
     if (mode == 'drag') {
         container.css("display", "block"); // show PhotoNav instance
         initDrag(container);
@@ -109,5 +108,9 @@ function createPhotoNav(id, mode)
     else if (mode == 'move') {
         container.css("display", "block"); // show PhotoNav instance
         initMove(container);
+    }
+    if (popup == 'colorbox') {
+        var photo = container.children(".photo");
+        photo.colorbox({maxWidth:"100%", inline: true, href: "#" + id});
     }
 }

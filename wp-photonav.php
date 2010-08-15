@@ -4,7 +4,7 @@
  Plugin Name: WP-PhotoNav
  Plugin URI: http://www.fabianmoser.at/wp-photonav
  Description: Provides a scrolling field without scrollbars for huge pictures. Especially usefull for panorama pictures.
- Version: 0.6
+ Version: 0.7
  Author: Fabian Moser
  Author URI: http://www.fabianmoser.at
  */
@@ -144,6 +144,7 @@ if (!class_exists("PhotoNav")) {
                 'container_height'=>NULL,       // 0.2
                 'photo_height'=>NULL,           // 0.2
                 'mode'=>'move',                 // 0.2
+                'popup'=>'none',                // 0.7
             );
             $a = shortcode_atts($defaults, $atts);
             if (is_numeric($a['height'])) {
@@ -169,7 +170,11 @@ if (!class_exists("PhotoNav")) {
             if (!in_array($a['mode'], $valid_modes)) {
                 $a['mode'] = 'move';
             }
-            $template_photonav = '<div class="photonav"><div class="container" style="width: %PHOTONAV_CONTAINERWIDTH%; height: %PHOTONAV_CONTAINERHEIGHT%;" id="%PHOTONAV_ID%"><div class="photo" style="width: %PHOTONAV_PHOTOWIDTH%; height: %PHOTONAV_PHOTOHEIGHT%; background-image: url(%PHOTONAV_URL%)"></div></div><script type="text/javascript">jQuery(document).ready(function($){createPhotoNav("%PHOTONAV_ID%","%PHOTONAV_MODE%");});</script></div>';
+            $valid_popups = array('none', 'colorbox');
+            if (!in_array($a['popup'], $valid_popups)) {
+                $a['popup'] = 'none';
+            }
+            $template_photonav = '<div class="photonav" id="%PHOTONAV_ID%"><div class="container" style="width: %PHOTONAV_CONTAINERWIDTH%; height: %PHOTONAV_CONTAINERHEIGHT%;"><div class="photo" style="width: %PHOTONAV_PHOTOWIDTH%; height: %PHOTONAV_PHOTOHEIGHT%; background-image: url(%PHOTONAV_URL%)"></div></div><script type="text/javascript">jQuery(document).ready(function($){createPhotoNav("%PHOTONAV_ID%","%PHOTONAV_MODE%","%PHOTONAV_POPUP%");});</script></div>';
             $template_photonav = str_replace("%PHOTONAV_ID%", $a['id'], $template_photonav);
             $template_photonav = str_replace("%PHOTONAV_MODE%", $a['mode'], $template_photonav);
             $template_photonav = str_replace("%PHOTONAV_URL%", $a['url'], $template_photonav);
@@ -177,6 +182,7 @@ if (!class_exists("PhotoNav")) {
             $template_photonav = str_replace("%PHOTONAV_CONTAINERHEIGHT%", $a['container_height'], $template_photonav);
             $template_photonav = str_replace("%PHOTONAV_PHOTOWIDTH%", $a['photo_width'], $template_photonav);
             $template_photonav = str_replace("%PHOTONAV_PHOTOHEIGHT%", $a['photo_height'], $template_photonav);
+            $template_photonav = str_replace("%PHOTONAV_POPUP%", $a['popup'], $template_photonav);
             return $template_photonav;
         }
 
