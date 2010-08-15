@@ -130,11 +130,12 @@ if (!class_exists("PhotoNav")) {
         function parse_shortcode($atts) {
             $defaults = array(                  // introduced in version
                 'url' => '',                    // 0.1
-                'height'=>'auto',               // 0.1
+                'height'=>'auto',               // 0.1 for backward compatibility
                 'container_width'=>'auto',      // 0.1
                 'container_height'=>NULL,       // 0.2
                 'mode'=>'move',                 // 0.2
                 'popup'=>'none',                // 0.7
+                'animate' => '0',               // 0.7
             );
             $a = shortcode_atts($defaults, $atts);
             $id = $this->getUniqueId();
@@ -173,7 +174,7 @@ if (!class_exists("PhotoNav")) {
             </div>
         </div>
     </div>
-    <script type="text/javascript">jQuery(document).ready(function(){jQuery("#%PHOTONAV_ID%").photoNav({mode:"%PHOTONAV_MODE%",popup:"%PHOTONAV_POPUP%"});});</script>
+    <script type="text/javascript">jQuery(document).ready(function(){jQuery("#%PHOTONAV_ID%").photoNav({mode:"%PHOTONAV_MODE%",popup:"%PHOTONAV_POPUP%",animate:"%PHOTONAV_ANIMATE%"});});</script>
 </div>
 PHOTONAVTEMPLATE;
             $template_photonav = str_replace("%PHOTONAV_ID%", $id, $template_photonav);
@@ -182,6 +183,7 @@ PHOTONAVTEMPLATE;
             $template_photonav = str_replace("%PHOTONAV_CONTAINERWIDTH%", $a['container_width'], $template_photonav);
             $template_photonav = str_replace("%PHOTONAV_CONTAINERHEIGHT%", $a['container_height'], $template_photonav);
             $template_photonav = str_replace("%PHOTONAV_POPUP%", $a['popup'], $template_photonav);
+            $template_photonav = str_replace("%PHOTONAV_ANIMATE%", $a['animate'], $template_photonav);
             return $template_photonav;
         }
 

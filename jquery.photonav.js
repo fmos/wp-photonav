@@ -18,7 +18,11 @@
  */
 
 (function ($) { $.fn.photoNav = function(settings) {
-    var config = {mode: 'move', popup: 'none'};
+    var config = {
+        mode: 'move',
+        popup: 'none',
+        animate: '0'
+    };
 
     if (settings) $.extend(config, settings);
 
@@ -34,8 +38,10 @@
                            (this.offsetWidth / (event.pageX - offset.left));
                 var curY = (this.offsetHeight - image[0].offsetHeight) /
                            (this.offsetHeight / (event.pageY - offset.top));
-                image.css('margin-left', curX > 0 ? 0 : curX);
-                image.css('margin-top', curY > 0 ? 0 : curY);
+                var imageWrapper = $(this).find('.image');
+                imageWrapper.stop();
+                imageWrapper.css('margin-left', curX > 0 ? 0 : curX);
+                imageWrapper.css('margin-top', curY > 0 ? 0 : curY);
             });
     }
 
@@ -46,24 +52,32 @@
         constraints[1] = container.offset().top  - image.height() + container.height();
         constraints[2] = container.offset().left;
         constraints[3] = container.offset().top;
-        image.draggable({containment: constraints});
+        container.find('.image').draggable({
+            containment: constraints,
+            start: function() { 
+                $(this).stop();
+            }
+        });
     }
 
     function initDrag360(container) {
-        var image = container.find('.image');
-        var imageWidth = image.children('img').width();
+        var image = container.find('img');
         var constraints = [0,0,0,0];
-        constraints[0] = container.offset().left - imageWidth     - container.width() ;
+        constraints[0] = container.offset().left - image.width()  - container.width() ;
         constraints[1] = container.offset().top  - image.height() + container.height();
-        constraints[2] = container.offset().left + imageWidth;
+        constraints[2] = container.offset().left + image.width();
         constraints[3] = container.offset().top;
-        image.css('width', imageWidth + container.width() + 2);
-        image.draggable({
+        var imageWrapper = container.find('.image');
+        imageWrapper.css('width', image.width() + container.width() + 2);
+        imageWrapper.draggable({
             containment: constraints,
+            start: function() {
+                $(this).stop();
+            },
             drag: function(e, ui) {
-                var newleft = ui.position.left % imageWidth;
+                var newleft = ui.position.left % image.width();
                 if (newleft > 0) {
-                    newleft -= imageWidth;
+                    newleft -= image.width();
                 }
                 ui.position.left = newleft;
             }
@@ -106,13 +120,19 @@
             });
     }
 
-    function createPhotoNav(photonav, mode, popup_type) {
+    function createPhotoNav(photonav, mode, popup_type, animate) {
         var container = photonav.children('.container');
         var popup = photonav.find('.popup');
 
         container.css('display', 'block'); // show PhotoNav instance
         photonav.find('.image').each(function () {
-            $(this).css('height', $(this).find('img').height())
+            var image = $(this).find('img');
+            $(this).css('height', image.height());
+            var minLeft = container.offset().left - image.width()  + container.width()
+            if (animate == '1') {
+		$(this).css('margin-left', 0);
+		$(this).animate({marginLeft: minLeft}, -10*minLeft, 'linear');
+            }
         });
 
         initMode(container, mode);
@@ -123,7 +143,7 @@
     }
 
     this.each(function() {
-        createPhotoNav($(this), config['mode'], config['popup']);
+        createPhotoNav($(this), config['mode'], config['popup'], config['animate']);
     });
 
     return this;
