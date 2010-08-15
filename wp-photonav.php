@@ -1,5 +1,4 @@
 <?php 
-// vim: ai ts=4 sts=4 et sw=4
 /*
  Plugin Name: WP-PhotoNav
  Plugin URI: http://www.fabianmoser.at/wp-photonav
@@ -15,8 +14,7 @@ if (!class_exists("PhotoNav")) {
 
         function init() {
             $baseDir = "/".PLUGINDIR."/wp-photonav";
-            wp_enqueue_script('photonav_script', $baseDir."/wp-photonav.js", array('jquery', 'jquery-ui-draggable'), "0.5");
-            wp_enqueue_style('photonav_style', $baseDir."/wp-photonav.css", array(), "0.5");
+            wp_enqueue_script('photonav', $baseDir."/jquery.photonav.js", array('jquery', 'jquery-ui-draggable'), '0.7');
             $this->register_fullscreen_media_button();
         }
 
@@ -126,10 +124,14 @@ if (!class_exists("PhotoNav")) {
             return $tabs;
         }
 
+        // Generate a random string for DOM identification
+        function getUniqueId() {
+            return substr(md5(uniqid(rand(), true)), 0, 16);
+        }
+
         // Parses the shortcode and its parameters and inserts the actual html code
         function parse_shortcode($atts) {
             $defaults = array(                  // introduced in version
-                'id' => 'undefined',            // 0.1
                 'url' => '',                    // 0.1
                 'height'=>'auto',               // 0.1
                 'container_width'=>'auto',      // 0.1
@@ -138,6 +140,7 @@ if (!class_exists("PhotoNav")) {
                 'popup'=>'none',                // 0.7
             );
             $a = shortcode_atts($defaults, $atts);
+            $id = $this->getUniqueId();
             if (is_numeric($a['height'])) {
                 $a['height'] = $a['height']."px";
             }
@@ -173,10 +176,10 @@ if (!class_exists("PhotoNav")) {
             </div>
         </div>
     </div>
-    <script type="text/javascript">jQuery(document).ready(function($){createPhotoNav("%PHOTONAV_ID%","%PHOTONAV_MODE%","%PHOTONAV_POPUP%");});</script>
+    <script type="text/javascript">jQuery(document).ready(function(){jQuery("#%PHOTONAV_ID%").photoNav({mode:"%PHOTONAV_MODE%",popup:"%PHOTONAV_POPUP%"});});</script>
 </div>
 PHOTONAVTEMPLATE;
-            $template_photonav = str_replace("%PHOTONAV_ID%", $a['id'], $template_photonav);
+            $template_photonav = str_replace("%PHOTONAV_ID%", $id, $template_photonav);
             $template_photonav = str_replace("%PHOTONAV_MODE%", $a['mode'], $template_photonav);
             $template_photonav = str_replace("%PHOTONAV_URL%", $a['url'], $template_photonav);
             $template_photonav = str_replace("%PHOTONAV_CONTAINERWIDTH%", $a['container_width'], $template_photonav);
@@ -198,15 +201,6 @@ load_plugin_textdomain('wp-photonav', $baseDir, 'wp-photonav');
 function type_url_form_photonav() {
     return '
 	<table class="describe"><tbody>
-		<tr>
-			<th valign="top" scope="row" class="label">
-				<span class="alignleft"><label for="insertonly[id]">' . __('ID', 'wp-photonav') . '</label></span>
-				<span class="alignright"><abbr title="required" class="required">*</abbr></span>
-			</th>
-			<td class="field">
-				<input id="insertonly[id]" name="insertonly[id]" value="" type="text">
-			</td>
-		</tr>	
 		<tr>
 			<th valign="top" scope="row" class="label">
 				<span class="alignleft"><label for="insertonly[url]">' . __('Panorama URL', 'wp-photonav') . '</label></span>
@@ -256,4 +250,5 @@ if (isset($photonav)) {
     add_shortcode('photonav', array(&$photonav, 'parse_shortcode'));
 }
 
+// vim: ai ts=4 sts=4 et sw=4
 ?>
