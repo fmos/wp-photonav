@@ -71,9 +71,6 @@ if (!class_exists("PhotoNav")) {
             }
 
             if ( !empty($_POST['insertonlybutton']) ) {
-                if ( !empty($_POST['insertonly']['id']) ) {
-                    $id = stripslashes( htmlspecialchars ($_POST['insertonly']['id'], ENT_QUOTES));
-                }
                 $url = $_POST['insertonly']['url'];
                 if ( !empty($url) && !strpos($url, "://") ) {
                     $url = "http://$url";
@@ -88,8 +85,8 @@ if (!class_exists("PhotoNav")) {
                 if ( !empty($_POST['insertonly']['containerheight'])) {
                     $extras .= " container_height=".stripslashes( htmlspecialchars ($_POST['insertonly']['containerheight'], ENT_QUOTES));
                 }
-                if ( !empty($id) && !empty($url) ) {
-                    $html  = "[photonav id='$id' mode='$mode' url='$url'$extras]";
+                if ( !empty($url) ) {
+                    $html  = "[photonav url='$url' mode='$mode'$extras]";
                 }
 
                 return media_send_to_editor($html);
@@ -218,7 +215,7 @@ function type_url_form_photonav() {
 		</tr>
 		<tr>
 			<th valign="top" scope="row" class="label">
-				<span class="alignleft"><label for="insertonly[containerwidth]">' . __('Container width', 'wp-photonav') . '</label></span>
+				<span class="alignleft"><label for="insertonly[containerwidth]">' . __('Frame width', 'wp-photonav') . '</label></span>
 			</th>
 			<td class="field">
 				<input id="insertonly[containerwidth]" name="insertonly[containerwidth]" value="" type="text" class="halfpint">
@@ -226,7 +223,7 @@ function type_url_form_photonav() {
 		</tr>
 		<tr>
 			<th valign="top" scope="row" class="label">
-				<span class="alignleft"><label for="insertonly[containerheight]">' . __('Container height', 'wp-photonav') . '</label></span>
+				<span class="alignleft"><label for="insertonly[containerheight]">' . __('Frame height', 'wp-photonav') . '</label></span>
 			</th>
 			<td class="field">
 				<input id="insertonly[containerheight]" name="insertonly[containerheight]" value="" type="text" class="halfpint">
@@ -235,7 +232,7 @@ function type_url_form_photonav() {
 		<tr>
 			<td></td>
 			<td>
-				<input type="submit" class="button" name="insertonlybutton" value="' . esc_attr_e('Insert into Post') . '" />
+				<input type="submit" class="button" name="insertonlybutton" value="' . esc_attr__('Insert into Post') . '" />
 			</td>
 		</tr>
 	</tbody></table>
