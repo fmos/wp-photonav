@@ -61,7 +61,7 @@
 				author : 'Fabian Moser',
 				authorurl : 'http://www.fabianmoser.at',
 				infourl : 'http://www.fabianmoser.at/wp-photonav',
-				version : "0.6"
+				version : "0.7"
 			};
 		}
 	});

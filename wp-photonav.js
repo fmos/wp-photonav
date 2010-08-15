@@ -18,99 +18,103 @@
  */
  
 /*
- * This event handler processes mousemove events if the element is in the "move" mode.
- * The handler is attached to the container element. 
- * 
- * Requires the photoWidth as input.
+ * This event handler processes mousemove events if the element is in the "move"
+ * mode. The handler is attached to the container element.
  */
-function containerMouseMove(event)
-{
-    var offset = event.data.container.offset();
-    var x = event.pageX - offset.left;
-    var y = event.pageY - offset.top;
-    var curX = (event.data.photo.offsetWidth - this.offsetWidth) / (this.offsetWidth / x);
-    var curY = (event.data.photo.offsetHeight - this.offsetHeight) / (this.offsetHeight / y);
-    if (curX < 0) curX = 0;
-    if (curY < 0) curY = 0;
-    event.data.photo.style.marginLeft = "-" + curX + "px";
-    event.data.photo.style.marginTop = "-" + curY + "px";
+function initMove(container) {
+    container.bind('mousemove', function (event) {
+            var image = jQuery(this).find('img');
+            var offset = jQuery(this).offset();
+            var curX = (this.offsetWidth - image[0].offsetWidth) / 
+                       (this.offsetWidth / (event.pageX - offset.left));
+            var curY = (this.offsetHeight - image[0].offsetHeight) / 
+                       (this.offsetHeight / (event.pageY - offset.top));
+            image.css('margin-left', curX > 0 ? 0 : curX);
+            image.css('margin-top', curY > 0 ? 0 : curY); 
+        });
 }
 
-/*
- * This event handler processes jQuery/Draggable.drag events and emulates
- * infinite dragging ability (360-degree rotation).
- */
-function photoDrag(event, ui)
-{
-    //var photo_width = ui.helper.width() - 2 * ui.helper.css("margin-left");
-    ui.position.left = ui.position.left % ui.helper.picture_width;
-}
-
-function initDrag(container)
-{
-    var photo = container.children(".photo");
+function initDrag(container) {
+    var image = container.find('img');
     var constraints = [0,0,0,0];
-    constraints[0] = container.width() - photo.width() + container.offset().left;
-    constraints[1] = container.height() - photo.height() + container.offset().top;
+    constraints[0] = container.offset().left - image.width()  + container.width();
+    constraints[1] = container.offset().top  - image.height() + container.height();
     constraints[2] = container.offset().left;
     constraints[3] = container.offset().top;
-    photo.draggable({ containment: constraints });
+    image.draggable({containment: constraints});
 }
 
-function initDrag360(container)
-{
-    var photo = container.children(".photo");
+function initDrag360(container) {
+    var image = container.find('.image');
+    var imageWidth = image.children('img').width();
     var constraints = [0,0,0,0];
-    constraints[0] = container.offset().left - container.width() - photo.width();
-    constraints[1] = container.height() - photo.height() + container.offset().top;
-    constraints[2] = container.offset().left + photo.width();
+    constraints[0] = container.offset().left - imageWidth     - container.width() ;
+    constraints[1] = container.offset().top  - image.height() + container.height();
+    constraints[2] = container.offset().left + imageWidth;
     constraints[3] = container.offset().top;
-    var totalwidth = photo.width() + container.width() + 2;
-    var photo_width = photo.width();
-    photo.css("width", totalwidth);
-    photo.draggable({
+    image.css('width', imageWidth + container.width() + 2);
+    image.draggable({
         containment: constraints,
         drag: function(e, ui) {
-            var newleft = ui.position.left % photo_width;
+            var newleft = ui.position.left % imageWidth;
             if (newleft > 0) {
-                newleft -= photo_width;
+                newleft -= imageWidth;
             }
             ui.position.left = newleft;
         }
     });
 }
 
-function initMove(container)
-{
-    container.bind("mousemove", {
-        container: container,
-        photo: container.children(".photo")[0]
-    }, containerMouseMove);
-}
-
 /*
- * Initialises the PhotoNav instance by calling the appropriate init method
- * above depending on the mode parameter. An invalid mode selection will leave
- * the PhotoNav instance hidden.
- * (This is being called inside jQuery.ready)
+ * Calls the appropriate init method above depending on the mode parameter.
  */
-function createPhotoNav(id, mode, popup)
-{
-    var container = jQuery(".container", "#" + id);
-    if (mode == 'drag') {
-        container.css("display", "block"); // show PhotoNav instance
+function initMode(container, mode) {
+    if (mode == 'move') {
+        initMove(container);
+    }
+    else if (mode == 'drag') {
         initDrag(container);
     }
     else if (mode == 'drag360') {
-        container.css("display", "block"); // show PhotoNav instance
         initDrag360(container);
     }
-    else if (mode == 'move') {
-        container.css("display", "block"); // show PhotoNav instance
-        initMove(container);
-    }
-    if (popup == 'colorbox') {
-        var photo = container.children(".photo");
-        photo.colorbox({maxWidth:"100%", inline: true, href: "#" + id});
+}
+
+/*
+ * Initializes the ColorBox popup.
+ */
+function initColorbox(image, popup, mode) {
+	var container = popup.children('.container');
+	image.colorbox({
+		maxWidth: '100%', maxHeight: '100%', inline: true, href: popup[0],
+		onOpen: function () { 
+			container.css('width', 'auto');
+			container.css('height', image.height());
+		},
+		onComplete: function () { 
+			var innerHeight = popup.parent().innerHeight();
+			if (innerHeight < popup.height()) {
+				container.css('height', innerHeight);
+			}
+            initMode(container, mode);
+		}
+	});
+}
+
+function createPhotoNav(id, mode, popup_type) {
+    var photonav = jQuery('#' + id);
+    var container = photonav.children('.container');
+    var popup = photonav.find('.popup');
+
+    container.css('display', 'block'); // show PhotoNav instance
+    photonav.find('.image').each(function () {
+        jQuery(this).css('height', jQuery(this).find('img').height())
+    });
+
+    initMode(container, mode);
+ 
+    if (popup_type == 'colorbox') {
+        initColorbox(container.find('img'), popup, mode);
     }
 }
+

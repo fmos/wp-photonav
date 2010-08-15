@@ -87,16 +87,9 @@ if (!class_exists("PhotoNav")) {
                 if ( !empty($_POST['insertonly']['containerwidth'])) {
                     $extras .= " container_width=".stripslashes( htmlspecialchars ($_POST['insertonly']['containerwidth'], ENT_QUOTES));
                 }
-                if ( !empty($_POST['insertonly']['photowidth'])) {
-                    $extras .= " photo_width=".stripslashes( htmlspecialchars ($_POST['insertonly']['photowidth'], ENT_QUOTES));
-                }
                 if ( !empty($_POST['insertonly']['containerheight'])) {
                     $extras .= " container_height=".stripslashes( htmlspecialchars ($_POST['insertonly']['containerheight'], ENT_QUOTES));
                 }
-                if ( !empty($_POST['insertonly']['photoheight'])) {
-                    $extras .= " photo_height=".stripslashes( htmlspecialchars ($_POST['insertonly']['photoheight'], ENT_QUOTES));
-                }
-
                 if ( !empty($id) && !empty($url) ) {
                     $html  = "[photonav id='$id' mode='$mode' url='$url'$extras]";
                 }
@@ -138,11 +131,9 @@ if (!class_exists("PhotoNav")) {
             $defaults = array(                  // introduced in version
                 'id' => 'undefined',            // 0.1
                 'url' => '',                    // 0.1
-                'height'=>'100',                // 0.1
+                'height'=>'auto',               // 0.1
                 'container_width'=>'auto',      // 0.1
-                'photo_width'=>'200',           // 0.1
                 'container_height'=>NULL,       // 0.2
-                'photo_height'=>NULL,           // 0.2
                 'mode'=>'move',                 // 0.2
                 'popup'=>'none',                // 0.7
             );
@@ -153,18 +144,10 @@ if (!class_exists("PhotoNav")) {
             if (is_numeric($a['container_width'])) {
                 $a['container_width'] = $a['container_width']."px";
             }
-            if (is_numeric($a['photo_width'])) {
-                $a['photo_width'] = $a['photo_width']."px";
-            }
             if (is_null($a['container_height'])) {
                 $a['container_height'] = $a['height']; // default to height
             } else if (is_numeric($a['container_height'])) {
-                    $a['container_height'] = $a['container_height']."px";
-            }
-            if (is_null($a['photo_height'])) {
-                $a['photo_height'] = $a['container_height']; // default to container_height
-            } else if (is_numeric($a['photo_height'])) {
-                    $a['photo_height'] = $a['photo_height']."px";
+                $a['container_height'] = $a['container_height']."px";
             }
             $valid_modes = array('move', 'drag', 'drag360');
             if (!in_array($a['mode'], $valid_modes)) {
@@ -174,14 +157,30 @@ if (!class_exists("PhotoNav")) {
             if (!in_array($a['popup'], $valid_popups)) {
                 $a['popup'] = 'none';
             }
-            $template_photonav = '<div class="photonav" id="%PHOTONAV_ID%"><div class="container" style="width: %PHOTONAV_CONTAINERWIDTH%; height: %PHOTONAV_CONTAINERHEIGHT%;"><div class="photo" style="width: %PHOTONAV_PHOTOWIDTH%; height: %PHOTONAV_PHOTOHEIGHT%; background-image: url(%PHOTONAV_URL%)"></div></div><script type="text/javascript">jQuery(document).ready(function($){createPhotoNav("%PHOTONAV_ID%","%PHOTONAV_MODE%","%PHOTONAV_POPUP%");});</script></div>';
+            $template_photonav = <<<PHOTONAVTEMPLATE
+<div class="photonav" id="%PHOTONAV_ID%">
+    <div class="container" style="width: %PHOTONAV_CONTAINERWIDTH%; height: %PHOTONAV_CONTAINERHEIGHT%; overflow: hidden; display: none;">
+        <div class="image" style="background-image: url(%PHOTONAV_URL%);">
+            <img src="%PHOTONAV_URL%" style="max-width: none;">
+        </div>
+    </div>
+    <div style="display: none;">
+        <div class="popup">
+            <div class="container" style="overflow: hidden;">
+                <div class="image" style="background-image: url(%PHOTONAV_URL%)">
+                    <img src="%PHOTONAV_URL%" style="max-width: none;">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">jQuery(document).ready(function($){createPhotoNav("%PHOTONAV_ID%","%PHOTONAV_MODE%","%PHOTONAV_POPUP%");});</script>
+</div>
+PHOTONAVTEMPLATE;
             $template_photonav = str_replace("%PHOTONAV_ID%", $a['id'], $template_photonav);
             $template_photonav = str_replace("%PHOTONAV_MODE%", $a['mode'], $template_photonav);
             $template_photonav = str_replace("%PHOTONAV_URL%", $a['url'], $template_photonav);
             $template_photonav = str_replace("%PHOTONAV_CONTAINERWIDTH%", $a['container_width'], $template_photonav);
             $template_photonav = str_replace("%PHOTONAV_CONTAINERHEIGHT%", $a['container_height'], $template_photonav);
-            $template_photonav = str_replace("%PHOTONAV_PHOTOWIDTH%", $a['photo_width'], $template_photonav);
-            $template_photonav = str_replace("%PHOTONAV_PHOTOHEIGHT%", $a['photo_height'], $template_photonav);
             $template_photonav = str_replace("%PHOTONAV_POPUP%", $a['popup'], $template_photonav);
             return $template_photonav;
         }
@@ -225,28 +224,10 @@ function type_url_form_photonav() {
 		</tr>
 		<tr>
 			<th valign="top" scope="row" class="label">
-				<span class="alignleft"><label for="insertonly[photowidth]">' . __('Photo width', 'wp-photonav') . '</label></span>
-				<span class="alignright"><abbr title="required" class="required">*</abbr></span>
-			</th>
-			<td class="field">
-				<input id="insertonly[photowidth]" name="insertonly[photowidth]" value="" type="text" class="halfpint">
-			</td>
-		</tr>
-		<tr>
-			<th valign="top" scope="row" class="label">
 				<span class="alignleft"><label for="insertonly[containerwidth]">' . __('Container width', 'wp-photonav') . '</label></span>
 			</th>
 			<td class="field">
 				<input id="insertonly[containerwidth]" name="insertonly[containerwidth]" value="" type="text" class="halfpint">
-			</td>
-		</tr>
-		<tr>
-			<th valign="top" scope="row" class="label">
-				<span class="alignleft"><label for="insertonly[photoheight]">' . __('Photo height', 'wp-photonav') . '</label></span>
-				<span class="alignright"><abbr title="required" class="required">*</abbr></span>
-			</th>
-			<td class="field">
-				<input id="insertonly[photoheight]" name="insertonly[photoheight]" value="" type="text" class="halfpint">
 			</td>
 		</tr>
 		<tr>
