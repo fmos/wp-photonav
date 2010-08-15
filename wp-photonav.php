@@ -85,6 +85,12 @@ if (!class_exists("PhotoNav")) {
                 if ( !empty($_POST['insertonly']['containerheight'])) {
                     $extras .= " container_height=".stripslashes( htmlspecialchars ($_POST['insertonly']['containerheight'], ENT_QUOTES));
                 }
+                if ( !empty($_POST['insertonly']['popup'])) {
+                    $extras .= " popup='".stripslashes( htmlspecialchars ($_POST['insertonly']['popup'], ENT_QUOTES))."'";
+                }
+                if ( !empty($_POST['insertonly']['animate'])) {
+                    $extras .= " animate=".stripslashes( htmlspecialchars ($_POST['insertonly']['animate'], ENT_QUOTES));
+                }
                 if ( !empty($url) ) {
                     $html  = "[photonav url='$url' mode='$mode'$extras]";
                 }
@@ -212,7 +218,9 @@ function type_url_form_photonav() {
 				<span class="alignleft"><label for="insertonly[mode]">' . __('Mode', 'wp-photonav') . '</label></span>
 			</th>
 			<td class="field">
-				<input id="insertonly[mode]" name="insertonly[mode]" value="" type="text">
+				<input id="insertonly[mode]" name="insertonly[mode]" value="move" type="radio" class="halfpint" /> Move<br />
+                                <input id="insertonly[mode]" name="insertonly[mode]" value="drag" type="radio" class="halfpint" /> Drag<br />
+                                <input id="insertonly[mode]" name="insertonly[mode]" value="drag360" type="radio" class="halfpint" /> Drag 360°
 			</td>
 		</tr>
 		<tr>
@@ -230,7 +238,24 @@ function type_url_form_photonav() {
 			<td class="field">
 				<input id="insertonly[containerheight]" name="insertonly[containerheight]" value="" type="text" class="halfpint">
 			</td>
-		</tr>				
+		</tr>
+		<tr>
+			<th valign="top" scope="row" class="label">
+				<span class="alignleft"><label for="insertonly[popup]">' . __('Popup', 'wp-photonav') . '</label></span>
+			</th>
+			<td class="field">
+				<input id="insertonly[popup]" name="insertonly[popup]" value="none" type="radio" class="halfpint" /> None<br />
+                                <input id="insertonly[popup]" name="insertonly[popup]" value="colorbox" type="radio" class="halfpint" /> Colorbox
+			</td>
+		</tr>
+		<tr>
+			<th valign="top" scope="row" class="label">
+				<span class="alignleft"><label for="insertonly[animate]">' . __('Animate', 'wp-photonav') . '</label></span>
+			</th>
+			<td class="field">
+				<input id="insertonly[animate]" name="insertonly[animate]" value="1" type="checkbox" class="halfpint"> Enable
+			</td>
+		</tr>
 		<tr>
 			<td></td>
 			<td>
