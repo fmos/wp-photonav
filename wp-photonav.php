@@ -167,14 +167,14 @@ if (!class_exists("PhotoNav")) {
             $template_photonav = <<<PHOTONAVTEMPLATE
 <div class="photonav" id="%PHOTONAV_ID%">
     <div class="container" style="width: %PHOTONAV_CONTAINERWIDTH%; height: %PHOTONAV_CONTAINERHEIGHT%; overflow: hidden; display: none;">
-        <div class="image" style="background-image: url(%PHOTONAV_URL%);">
+        <div class="image" style="background-image: url(%PHOTONAV_URL%); position: relative;">
             <img src="%PHOTONAV_URL%" style="max-width: none;">
         </div>
     </div>
     <div style="display: none;">
         <div class="popup">
             <div class="container" style="overflow: hidden;">
-                <div class="image" style="background-image: url(%PHOTONAV_URL%)">
+                <div class="image" style="background-image: url(%PHOTONAV_URL%); position: relative;">
                     <img src="%PHOTONAV_URL%" style="max-width: none;">
                 </div>
             </div>

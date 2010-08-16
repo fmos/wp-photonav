@@ -40,8 +40,8 @@
                            (this.offsetHeight / (event.pageY - offset.top));
                 var imageWrapper = $(this).find('.image');
                 imageWrapper.stop();
-                imageWrapper.css('margin-left', curX > 0 ? 0 : curX);
-                imageWrapper.css('margin-top', curY > 0 ? 0 : curY);
+                imageWrapper.css('left', curX > 0 ? 0 : curX);
+                imageWrapper.css('top',  curY > 0 ? 0 : curY);
             });
     }
 
@@ -130,8 +130,8 @@
             $(this).css('height', image.height());
             var minLeft = container.offset().left - image.width()  + container.width()
             if (animate == '1') {
-		$(this).css('margin-left', 0);
-		$(this).animate({marginLeft: minLeft}, -10*minLeft, 'linear');
+		$(this).css('left', 0);
+		$(this).animate({left: minLeft}, -10*minLeft, 'linear');
             }
         });
 
