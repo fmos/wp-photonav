@@ -15,6 +15,7 @@ if (!class_exists("PhotoNav")) {
         function init() {
             $baseDir = "/".PLUGINDIR."/wp-photonav";
             wp_enqueue_script('photonav', $baseDir."/jquery.photonav.js", array('jquery', 'jquery-ui-draggable'), '0.7');
+            wp_enqueue_style('photonav_style', $baseDir."/wp-photonav.css", array(), "0.7");
             $this->register_fullscreen_media_button();
         }
 
@@ -166,16 +167,16 @@ if (!class_exists("PhotoNav")) {
             }
             $template_photonav = <<<PHOTONAVTEMPLATE
 <div class="photonav" id="%PHOTONAV_ID%">
-    <div class="container" style="width: %PHOTONAV_CONTAINERWIDTH%; height: %PHOTONAV_CONTAINERHEIGHT%; overflow: hidden; display: none;">
-        <div class="image" style="background-image: url(%PHOTONAV_URL%); position: relative;">
-            <img src="%PHOTONAV_URL%" style="max-width: none;">
+    <div class="container" style="width: %PHOTONAV_CONTAINERWIDTH%; height: %PHOTONAV_CONTAINERHEIGHT%;">
+        <div class="image" style="background-image: url(%PHOTONAV_URL%);">
+            <img class="colorbox-off" src="%PHOTONAV_URL%">
         </div>
     </div>
     <div style="display: none;">
         <div class="popup">
-            <div class="container" style="overflow: hidden;">
-                <div class="image" style="background-image: url(%PHOTONAV_URL%); position: relative;">
-                    <img src="%PHOTONAV_URL%" style="max-width: none;">
+            <div class="container" style="display: block; overflow: hidden;">
+                <div class="image" style="background-image: url(%PHOTONAV_URL%);">
+                    <img class="colorbox-off" src="%PHOTONAV_URL%">
                 </div>
             </div>
         </div>

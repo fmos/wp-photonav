@@ -97,6 +97,7 @@
         // Initializes the ColorBox popup.
         function initColorbox(image, popup, mode) {
             var container = popup.children('.container');
+            var innerImage = container.children('.image');
             image.colorbox({
                 maxWidth: '100%',
                 maxHeight: '100%',
@@ -105,6 +106,8 @@
                 onOpen: function () {
                     container.css('width', 'auto');
                     container.css('height', image.height());
+                    innerImage.css('background-repeat', 'repeat');
+                    innerImage.css('height', image.height());
                 },
                 onComplete: function () {
                     var innerHeight = popup.parent().innerHeight();
