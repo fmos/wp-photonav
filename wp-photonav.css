@@ -1,24 +1,17 @@
 .photonav .container {
-	display: none;
-	clear: both;
 	overflow: hidden;
-	border: 1px solid gray;
-	margin: 10px;
+	display: none;
 }
 
-.photonav .container .photo {
-	overflow: visible;
+.photonav .image {
+	position: relative;
 	background-position: top left;
-	float: left;
-	margin-left: 0px;
-	margin-top: 0px;
+	background-repeat: repeat-x;
 }
 
-.photonav .container .photo img {
-	display: block;
-	border: 0px;
+.photonav img {
+	max-width: none;
+	padding: 0;
+	border: 0;
 }
 
-.photonav .container .photo a {
-	display: block;
-}

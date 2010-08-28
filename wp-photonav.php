@@ -1,10 +1,9 @@
 <?php 
-// vim: ai ts=4 sts=4 et sw=4
 /*
  Plugin Name: WP-PhotoNav
  Plugin URI: http://www.fabianmoser.at/wp-photonav
  Description: Provides a scrolling field without scrollbars for huge pictures. Especially usefull for panorama pictures.
- Version: 0.6
+ Version: 0.7
  Author: Fabian Moser
  Author URI: http://www.fabianmoser.at
  */
@@ -15,8 +14,8 @@ if (!class_exists("PhotoNav")) {
 
         function init() {
             $baseDir = "/".PLUGINDIR."/wp-photonav";
-            wp_enqueue_script('photonav_script', $baseDir."/wp-photonav.js", array('jquery', 'jquery-ui-draggable'), "0.5");
-            wp_enqueue_style('photonav_style', $baseDir."/wp-photonav.css", array(), "0.5");
+            wp_enqueue_script('photonav', $baseDir."/jquery.photonav.js", array('jquery', 'jquery-ui-draggable'), '0.7');
+            wp_enqueue_style('photonav_style', $baseDir."/wp-photonav.css", array(), "0.7");
             $this->register_fullscreen_media_button();
         }
 
@@ -73,9 +72,6 @@ if (!class_exists("PhotoNav")) {
             }
 
             if ( !empty($_POST['insertonlybutton']) ) {
-                if ( !empty($_POST['insertonly']['id']) ) {
-                    $id = stripslashes( htmlspecialchars ($_POST['insertonly']['id'], ENT_QUOTES));
-                }
                 $url = $_POST['insertonly']['url'];
                 if ( !empty($url) && !strpos($url, "://") ) {
                     $url = "http://$url";
@@ -87,18 +83,17 @@ if (!class_exists("PhotoNav")) {
                 if ( !empty($_POST['insertonly']['containerwidth'])) {
                     $extras .= " container_width=".stripslashes( htmlspecialchars ($_POST['insertonly']['containerwidth'], ENT_QUOTES));
                 }
-                if ( !empty($_POST['insertonly']['photowidth'])) {
-                    $extras .= " photo_width=".stripslashes( htmlspecialchars ($_POST['insertonly']['photowidth'], ENT_QUOTES));
-                }
                 if ( !empty($_POST['insertonly']['containerheight'])) {
                     $extras .= " container_height=".stripslashes( htmlspecialchars ($_POST['insertonly']['containerheight'], ENT_QUOTES));
                 }
-                if ( !empty($_POST['insertonly']['photoheight'])) {
-                    $extras .= " photo_height=".stripslashes( htmlspecialchars ($_POST['insertonly']['photoheight'], ENT_QUOTES));
+                if ( !empty($_POST['insertonly']['popup'])) {
+                    $extras .= " popup='".stripslashes( htmlspecialchars ($_POST['insertonly']['popup'], ENT_QUOTES))."'";
                 }
-
-                if ( !empty($id) && !empty($url) ) {
-                    $html  = "[photonav id='$id' mode='$mode' url='$url'$extras]";
+                if ( !empty($_POST['insertonly']['animate'])) {
+                    $extras .= " animate=".stripslashes( htmlspecialchars ($_POST['insertonly']['animate'], ENT_QUOTES));
+                }
+                if ( !empty($url) ) {
+                    $html  = "[photonav url='$url' mode='$mode'$extras]";
                 }
 
                 return media_send_to_editor($html);
@@ -133,50 +128,69 @@ if (!class_exists("PhotoNav")) {
             return $tabs;
         }
 
+        // Generate a random string for DOM identification
+        function getUniqueId() {
+            return substr(md5(uniqid(rand(), true)), 0, 16);
+        }
+
         // Parses the shortcode and its parameters and inserts the actual html code
         function parse_shortcode($atts) {
             $defaults = array(                  // introduced in version
-                'id' => 'undefined',            // 0.1
                 'url' => '',                    // 0.1
-                'height'=>'100',                // 0.1
+                'height'=>'auto',               // 0.1 for backward compatibility
                 'container_width'=>'auto',      // 0.1
-                'photo_width'=>'200',           // 0.1
                 'container_height'=>NULL,       // 0.2
-                'photo_height'=>NULL,           // 0.2
                 'mode'=>'move',                 // 0.2
+                'popup'=>'none',                // 0.7
+                'animate' => '0',               // 0.7
             );
             $a = shortcode_atts($defaults, $atts);
+            $id = $this->getUniqueId();
             if (is_numeric($a['height'])) {
                 $a['height'] = $a['height']."px";
             }
             if (is_numeric($a['container_width'])) {
                 $a['container_width'] = $a['container_width']."px";
             }
-            if (is_numeric($a['photo_width'])) {
-                $a['photo_width'] = $a['photo_width']."px";
-            }
             if (is_null($a['container_height'])) {
                 $a['container_height'] = $a['height']; // default to height
             } else if (is_numeric($a['container_height'])) {
-                    $a['container_height'] = $a['container_height']."px";
-            }
-            if (is_null($a['photo_height'])) {
-                $a['photo_height'] = $a['container_height']; // default to container_height
-            } else if (is_numeric($a['photo_height'])) {
-                    $a['photo_height'] = $a['photo_height']."px";
+                $a['container_height'] = $a['container_height']."px";
             }
             $valid_modes = array('move', 'drag', 'drag360');
             if (!in_array($a['mode'], $valid_modes)) {
                 $a['mode'] = 'move';
             }
-            $template_photonav = '<div class="photonav"><div class="container" style="width: %PHOTONAV_CONTAINERWIDTH%; height: %PHOTONAV_CONTAINERHEIGHT%;" id="%PHOTONAV_ID%"><div class="photo" style="width: %PHOTONAV_PHOTOWIDTH%; height: %PHOTONAV_PHOTOHEIGHT%; background-image: url(%PHOTONAV_URL%)"></div></div><script type="text/javascript">jQuery(document).ready(function($){createPhotoNav("%PHOTONAV_ID%","%PHOTONAV_MODE%");});</script></div>';
-            $template_photonav = str_replace("%PHOTONAV_ID%", $a['id'], $template_photonav);
+            $valid_popups = array('none', 'colorbox');
+            if (!in_array($a['popup'], $valid_popups)) {
+                $a['popup'] = 'none';
+            }
+            $template_photonav = <<<PHOTONAVTEMPLATE
+<div class="photonav" id="%PHOTONAV_ID%">
+    <div class="container" style="width: %PHOTONAV_CONTAINERWIDTH%; height: %PHOTONAV_CONTAINERHEIGHT%;">
+        <div class="image" style="background-image: url(%PHOTONAV_URL%);">
+            <img class="colorbox-off" src="%PHOTONAV_URL%">
+        </div>
+    </div>
+    <div style="display: none;">
+        <div class="popup">
+            <div class="container" style="display: block; overflow: hidden;">
+                <div class="image" style="background-image: url(%PHOTONAV_URL%);">
+                    <img class="colorbox-off" src="%PHOTONAV_URL%">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">jQuery(document).ready(function(){jQuery("#%PHOTONAV_ID%").photoNav({mode:"%PHOTONAV_MODE%",popup:"%PHOTONAV_POPUP%",animate:"%PHOTONAV_ANIMATE%"});});</script>
+</div>
+PHOTONAVTEMPLATE;
+            $template_photonav = str_replace("%PHOTONAV_ID%", $id, $template_photonav);
             $template_photonav = str_replace("%PHOTONAV_MODE%", $a['mode'], $template_photonav);
             $template_photonav = str_replace("%PHOTONAV_URL%", $a['url'], $template_photonav);
             $template_photonav = str_replace("%PHOTONAV_CONTAINERWIDTH%", $a['container_width'], $template_photonav);
             $template_photonav = str_replace("%PHOTONAV_CONTAINERHEIGHT%", $a['container_height'], $template_photonav);
-            $template_photonav = str_replace("%PHOTONAV_PHOTOWIDTH%", $a['photo_width'], $template_photonav);
-            $template_photonav = str_replace("%PHOTONAV_PHOTOHEIGHT%", $a['photo_height'], $template_photonav);
+            $template_photonav = str_replace("%PHOTONAV_POPUP%", $a['popup'], $template_photonav);
+            $template_photonav = str_replace("%PHOTONAV_ANIMATE%", $a['animate'], $template_photonav);
             return $template_photonav;
         }
 
@@ -195,15 +209,6 @@ function type_url_form_photonav() {
 	<table class="describe"><tbody>
 		<tr>
 			<th valign="top" scope="row" class="label">
-				<span class="alignleft"><label for="insertonly[id]">' . __('ID', 'wp-photonav') . '</label></span>
-				<span class="alignright"><abbr title="required" class="required">*</abbr></span>
-			</th>
-			<td class="field">
-				<input id="insertonly[id]" name="insertonly[id]" value="" type="text">
-			</td>
-		</tr>	
-		<tr>
-			<th valign="top" scope="row" class="label">
 				<span class="alignleft"><label for="insertonly[url]">' . __('Panorama URL', 'wp-photonav') . '</label></span>
 				<span class="alignright"><abbr title="required" class="required">*</abbr></span>
 			</th>
@@ -214,21 +219,14 @@ function type_url_form_photonav() {
 				<span class="alignleft"><label for="insertonly[mode]">' . __('Mode', 'wp-photonav') . '</label></span>
 			</th>
 			<td class="field">
-				<input id="insertonly[mode]" name="insertonly[mode]" value="" type="text">
+				<input id="insertonly[mode]" name="insertonly[mode]" value="move" type="radio" class="halfpint" /> Move<br />
+                                <input id="insertonly[mode]" name="insertonly[mode]" value="drag" type="radio" class="halfpint" /> Drag<br />
+                                <input id="insertonly[mode]" name="insertonly[mode]" value="drag360" type="radio" class="halfpint" /> Drag 360°
 			</td>
 		</tr>
 		<tr>
 			<th valign="top" scope="row" class="label">
-				<span class="alignleft"><label for="insertonly[photowidth]">' . __('Photo width', 'wp-photonav') . '</label></span>
-				<span class="alignright"><abbr title="required" class="required">*</abbr></span>
-			</th>
-			<td class="field">
-				<input id="insertonly[photowidth]" name="insertonly[photowidth]" value="" type="text" class="halfpint">
-			</td>
-		</tr>
-		<tr>
-			<th valign="top" scope="row" class="label">
-				<span class="alignleft"><label for="insertonly[containerwidth]">' . __('Container width', 'wp-photonav') . '</label></span>
+				<span class="alignleft"><label for="insertonly[containerwidth]">' . __('Frame width', 'wp-photonav') . '</label></span>
 			</th>
 			<td class="field">
 				<input id="insertonly[containerwidth]" name="insertonly[containerwidth]" value="" type="text" class="halfpint">
@@ -236,25 +234,33 @@ function type_url_form_photonav() {
 		</tr>
 		<tr>
 			<th valign="top" scope="row" class="label">
-				<span class="alignleft"><label for="insertonly[photoheight]">' . __('Photo height', 'wp-photonav') . '</label></span>
-				<span class="alignright"><abbr title="required" class="required">*</abbr></span>
-			</th>
-			<td class="field">
-				<input id="insertonly[photoheight]" name="insertonly[photoheight]" value="" type="text" class="halfpint">
-			</td>
-		</tr>
-		<tr>
-			<th valign="top" scope="row" class="label">
-				<span class="alignleft"><label for="insertonly[containerheight]">' . __('Container height', 'wp-photonav') . '</label></span>
+				<span class="alignleft"><label for="insertonly[containerheight]">' . __('Frame height', 'wp-photonav') . '</label></span>
 			</th>
 			<td class="field">
 				<input id="insertonly[containerheight]" name="insertonly[containerheight]" value="" type="text" class="halfpint">
 			</td>
-		</tr>				
+		</tr>
+		<tr>
+			<th valign="top" scope="row" class="label">
+				<span class="alignleft"><label for="insertonly[popup]">' . __('Popup', 'wp-photonav') . '</label></span>
+			</th>
+			<td class="field">
+				<input id="insertonly[popup]" name="insertonly[popup]" value="none" type="radio" class="halfpint" /> None<br />
+                                <input id="insertonly[popup]" name="insertonly[popup]" value="colorbox" type="radio" class="halfpint" /> Colorbox
+			</td>
+		</tr>
+		<tr>
+			<th valign="top" scope="row" class="label">
+				<span class="alignleft"><label for="insertonly[animate]">' . __('Animate', 'wp-photonav') . '</label></span>
+			</th>
+			<td class="field">
+				<input id="insertonly[animate]" name="insertonly[animate]" value="1" type="checkbox" class="halfpint"> Enable
+			</td>
+		</tr>
 		<tr>
 			<td></td>
 			<td>
-				<input type="submit" class="button" name="insertonlybutton" value="' . esc_attr_e('Insert into Post') . '" />
+				<input type="submit" class="button" name="insertonlybutton" value="' . esc_attr__('Insert into Post') . '" />
 			</td>
 		</tr>
 	</tbody></table>
@@ -269,4 +275,5 @@ if (isset($photonav)) {
     add_shortcode('photonav', array(&$photonav, 'parse_shortcode'));
 }
 
+// vim: ai ts=4 sts=4 et sw=4
 ?>
