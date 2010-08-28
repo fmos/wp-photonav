@@ -4,7 +4,7 @@
  * 	PhotoNavigation for WordPress
  * 	
  * 	Version 0.7
- * 	Date: 10-08-15
+ * 	Date: 10-08-28
  * 
  */
 
