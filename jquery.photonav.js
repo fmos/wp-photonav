@@ -3,8 +3,8 @@
 /*
  * 	PhotoNavigation for WordPress
  * 	
- * 	Version 0.7
- * 	Date: 10-08-28
+ * 	Version 0.8
+ * 	Date: 10-11-21
  * 
  */
 
