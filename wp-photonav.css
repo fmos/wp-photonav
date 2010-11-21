@@ -1,17 +1,21 @@
 .photonav .container {
-	overflow: hidden;
-	display: none;
+    overflow: hidden;
+    display: none;
 }
 
 .photonav .image {
-	position: relative;
-	background-position: top left;
-	background-repeat: repeat-x;
+    position: relative;
+    background-position: top left;
+    background-repeat: repeat-x;
 }
 
 .photonav img {
-	max-width: none;
-	padding: 0;
-	border: 0;
+    max-width: none;
+    padding: 0;
+    border: 0;
 }
 
+/* Override eventual theme settings for img elements */
+#photonav-content img {
+    max-width: none;
+}
