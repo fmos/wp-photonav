@@ -26,6 +26,9 @@ For usage examples and documentation, please visit the [plugin page](http://www.
 
 == Changelog ==
 
+= 0.8 =
+* Bugfix: Interference of CSS properties with TwentyTen theme fixed.
+
 = 0.7 =
 * Feature: Support for popup display with ColorBox (similar to LightBox) when the jQuery Colorbox WordPress plugin is active
 * Feature: Animated automaticl scrolling
