@@ -168,7 +168,7 @@ if (!class_exists("PhotoNav")) {
             $template_photonav = <<<PHOTONAVTEMPLATE
 <div class="photonav" id="%PHOTONAV_ID%">
     <div class="container" style="width: %PHOTONAV_CONTAINERWIDTH%; height: %PHOTONAV_CONTAINERHEIGHT%;">
-        <div class="image" style="background-image: url(%PHOTONAV_URL%);">
+        <div id="photonav-content" class="image" style="background-image: url(%PHOTONAV_URL%);">
             <img class="colorbox-off" src="%PHOTONAV_URL%">
         </div>
     </div>
