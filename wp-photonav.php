@@ -275,5 +275,7 @@ if (isset($photonav)) {
     add_shortcode('photonav', array(&$photonav, 'parse_shortcode'));
 }
 
+include 'widget.php';
+
 // vim: ai ts=4 sts=4 et sw=4
 ?>
