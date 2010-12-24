@@ -43,17 +43,11 @@ if (!class_exists("PhotoNavWidget")) {
 			$url = attribute_escape($options['url']);
 			$width = attribute_escape($options['width']);
 			$height = attribute_escape($options['height']);
-	
+
 			// set defaults
-			if ($title == '')
-				$title = 'WP-Photonav';
 			if ($url == '')
 				$url = 'Photo URL';
-			if ($width == '')
-				$width = '310';
-			if ($height == '')
-				$height = '197';
-		
+
 			// widget label	
 			?>
 	<p><label for="photonavwidget_widget_title"><?php _e('Title:'); ?> <input class="widefat" id="photonavwidget_widget_title" name="photonavwidget_widget_title" type="text" value="<?php echo $title; ?>" /></label></p>
