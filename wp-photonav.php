@@ -3,7 +3,7 @@
  Plugin Name: WP-PhotoNav
  Plugin URI: http://www.fabianmoser.at/wp-photonav
  Description: Provides a scrolling field without scrollbars for huge pictures. Especially useful for panorama pictures.
- Version: 0.8
+ Version: 0.9
  Author: Fabian Moser
  Author URI: http://www.fabianmoser.at
  */
@@ -113,8 +113,9 @@ if (!class_exists("PhotoNav")) {
                 return media_upload_gallery();
             }
 
-            if ( isset($_GET['tab']) && $_GET['tab'] == 'type_url' )
-                return wp_iframe( 'media_upload_type_url_form', 'photonav', $errors, $id );
+            if ( isset($_GET['tab']) && $_GET['tab'] == 'type_url' ) {
+            	return wp_iframe( 'media_upload_type_url_form', 'photonav', $errors, $id );
+            }
 
             // The upload tab is deactivated and there is no upload form available, only the URL form
             return;
@@ -127,6 +128,66 @@ if (!class_exists("PhotoNav")) {
             }
             return $tabs;
         }
+        
+	    /**
+		 * Retrieve HTML for the mode radio buttons with the specified one checked.
+		 *
+		 * @since 0.9
+		 *
+		 * @param unknown_type $post
+		 * @param unknown_type $checked
+		 * @return unknown
+		 */
+		function mode_input_field( $post, $check = '' ) {
+		
+			// get a list of the actual pixel dimensions of each possible intermediate version of this image
+			$mode_names = array('move' => __('Move'), 'drag' => __('Drag'), 'drag360' => __('Drag 360°'));
+	
+			if ( empty($check) )
+				$check = 'move';
+	
+			foreach ( $mode_names as $mode => $label ) {
+				$checked = '';
+	
+				$css_id = "photonav-mode-{$mode}-{$post->ID}";
+				// if this size is the default but that's not available, don't select it
+				if ( $size == $check ) {
+					$checked = " checked='checked'";
+				}
+	
+				$html = "<span class='photonav-mode-item'><input type='radio' name='attachments[$post->ID][photonav-mode]' id='{$css_id}' value='{$mode}'$checked />";
+				$html .= "<label for='{$css_id}'>$label</label>";
+				$html .= '</span>';
+	
+				$out[] = $html;
+			}
+	
+			return array(
+				'label' => __('PhotoNav Mode'),
+				'input' => 'html',
+				'html'  => join("\n", $out),
+			);
+		}
+        
+	    function attachment_fields_edit($form_fields, $post) {
+	        if ( isset($_REQUEST['type']) && ($_REQUEST['type'] == 'photonav') ) {
+				$form_fields['photonav-mode'] = $this->mode_input_field( $post );
+				unset($form_fields['align'], $form_fields['image-size'], 
+					$form_fields['url'], $form_fields['post_title'], $form_fields['image_alt'],
+					$form_fields['post_excerpt'], $form_fields['post_content']);
+            }
+			return $form_fields;
+		}
+		
+	    function media_send_to_editor($html, $attachment_id, $attachment) {
+			$post =& get_post($attachment_id);
+			if ( isset($_REQUEST['type']) && ($_REQUEST['type'] == 'photonav') ) {
+				$url = wp_get_attachment_url($attachment_id);
+				$mode = $attachment['photonav-mode'];
+				return "[photonav url='$url' mode='$mode']";
+			}
+			return $html;
+		}
 
         // Generate a random string for DOM identification
         function getUniqueId() {
@@ -272,6 +333,8 @@ if (isset($photonav)) {
     add_action('media_buttons', array(&$photonav, 'add_media_button'), 20);
     add_action('media_upload_photonav', array(&$photonav, 'media_upload_photonav'));
     add_filter('media_upload_tabs', array(&$photonav, 'remove_type_tab'));
+	add_filter('attachment_fields_to_edit', array(&$photonav, 'attachment_fields_edit'), 11, 2);
+	add_filter('media_send_to_editor', array(&$photonav, 'media_send_to_editor'), 11, 3);
     add_shortcode('photonav', array(&$photonav, 'parse_shortcode'));
 }
 

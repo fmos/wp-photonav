@@ -26,6 +26,10 @@ For usage examples and documentation, please visit the [plugin page](http://www.
 
 == Changelog ==
 
+= 0.9 =
+* Feature: PhotoNav widget (by Norman Stanke)
+* Feature: Integration with Media Library tab in the editor dialog
+
 = 0.8 =
 * Bugfix: Interference of CSS properties with TwentyTen theme fixed.
 
