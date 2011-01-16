@@ -6,7 +6,7 @@ Requires at least: 2.8
 Tested up to: 3.0.1
 Stable tag: trunk
 
-Provides a scrolling field without scrollbars for pictures with huge horizontal dimensions. Especially usefull for panorama pictures.
+Provides a scrolling field without scrollbars for pictures with huge horizontal dimensions. Especially useful for panorama pictures.
 
 == Description ==
 
