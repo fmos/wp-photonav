@@ -131,16 +131,9 @@ if (!class_exists("PhotoNav")) {
         
 	    /**
 		 * Retrieve HTML for the mode radio buttons with the specified one checked.
-		 *
 		 * @since 0.9
-		 *
-		 * @param unknown_type $post
-		 * @param unknown_type $checked
-		 * @return unknown
 		 */
 		function mode_input_field( $post, $check = '' ) {
-		
-			// get a list of the actual pixel dimensions of each possible intermediate version of this image
 			$mode_names = array('move' => __('Move'), 'drag' => __('Drag'), 'drag360' => __('Drag 360°'));
 	
 			if ( empty($check) )
@@ -151,7 +144,7 @@ if (!class_exists("PhotoNav")) {
 	
 				$css_id = "photonav-mode-{$mode}-{$post->ID}";
 				// if this size is the default but that's not available, don't select it
-				if ( $size == $check ) {
+				if ( $mode == $check ) {
 					$checked = " checked='checked'";
 				}
 	
@@ -163,15 +156,97 @@ if (!class_exists("PhotoNav")) {
 			}
 	
 			return array(
-				'label' => __('PhotoNav Mode'),
+				'label' => __('Mode'),
 				'input' => 'html',
 				'html'  => join("\n", $out),
 			);
 		}
-        
+		
+	    /**
+		 * Retrieve HTML for the popup radio buttons with the specified one checked.
+		 * @since 0.9
+		 */
+    	function popup_input_field( $post, $check = '' ) {
+			$popup_names = array('none' => __('None'), 'colorbox' => __('Colorbox'));
+	
+			if ( empty($check) )
+				$check = 'none';
+	
+			foreach ( $popup_names as $popup => $label ) {
+				$checked = '';
+	
+				$css_id = "photonav-mode-{$popup}-{$post->ID}";
+				// if this size is the default but that's not available, don't select it
+				if ( $popup == $check ) {
+					$checked = " checked='checked'";
+				}
+	
+				$html = "<span class='photonav-popup-item'><input type='radio' name='attachments[$post->ID][photonav-popup]' id='{$css_id}' value='{$popup}'$checked />";
+				$html .= "<label for='{$css_id}'>$label</label>";
+				$html .= '</span>';
+	
+				$out[] = $html;
+			}
+	
+			return array(
+				'label' => __('Popup'),
+				'input' => 'html',
+				'html'  => join("\n", $out),
+			);
+		}
+		
+        /**
+		 * Retrieve HTML for the animate checkbox.
+		 * @since 0.9
+		 */
+    	function animate_input_field( $post, $check = '' ) {	
+			if ( empty($check) )
+				$check = '0';
+
+			$css_id = "photonav-animate-{$post->ID}";
+			$html = "<span class='photonav-animate'><input type='checkbox' name='attachments[$post->ID][photonav-animate]' id='{$css_id}' value='1' /></span>";
+			$out[] = $html;
+	
+			return array(
+				'label' => __('Animate'),
+				'input' => 'html',
+				'html'  => join("\n", $out),
+			);
+		}
+
+        /**
+		 * Retrieve HTML for the frame size.
+		 * @since 0.9
+		 */
+    	function framesize_input_field( $post ) {	
+    		$dim_names = array('height' => __('Height'), 'width' => __('Width'));
+    		
+    		foreach ( $dim_names as $dim => $label ) {
+				$css_id = "photonav-{$dim}-{$post->ID}";
+				
+				$html = "<span class='photonav-frame-item'>";
+				$html .= "<label for='{$css_id}'>$label (px)</label>";
+				$html .= "<input type='text' name='attachments[$post->ID][photonav-$dim]' id='{$css_id}' value='' style='width:100px'' />";
+				$html .= '</span>';
+				
+				$out[] = $html;
+			}
+    			
+			return array(
+				'label' => __('Frame size'),
+				'input' => 'html',
+				'html'  => join("\n", $out),
+			);
+		}
+		
+		
 	    function attachment_fields_edit($form_fields, $post) {
 	        if ( isset($_REQUEST['type']) && ($_REQUEST['type'] == 'photonav') ) {
 				$form_fields['photonav-mode'] = $this->mode_input_field( $post );
+				$form_fields['photonav-framesize'] = $this->framesize_input_field( $post );
+				$form_fields['photonav-popup'] = $this->popup_input_field( $post );
+				$form_fields['photonav-animate'] = $this->animate_input_field( $post );
+				
 				unset($form_fields['align'], $form_fields['image-size'], 
 					$form_fields['url'], $form_fields['post_title'], $form_fields['image_alt'],
 					$form_fields['post_excerpt'], $form_fields['post_content']);
@@ -184,7 +259,11 @@ if (!class_exists("PhotoNav")) {
 			if ( isset($_REQUEST['type']) && ($_REQUEST['type'] == 'photonav') ) {
 				$url = wp_get_attachment_url($attachment_id);
 				$mode = $attachment['photonav-mode'];
-				return "[photonav url='$url' mode='$mode']";
+				$popup = $attachment['photonav-popup'];
+				$animate = $attachment['photonav-animate'];
+				$height = $attachment['photonav-height'];
+				$width = $attachment['photonav-width'];
+				return "[photonav url='$url' mode='$mode' popup='$popup' animate='$animate' container_width='$width' container_height='$height']";
 			}
 			return $html;
 		}
