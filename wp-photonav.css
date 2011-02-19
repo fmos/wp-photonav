@@ -9,13 +9,11 @@
     background-repeat: repeat-x;
 }
 
-.photonav img {
-    max-width: none;
-    padding: 0;
-    border: 0;
-}
-
 /* Override eventual theme settings for img elements */
 #photonav-content img {
+    border: 0;
+    margin: 0;
     max-width: none;
+    padding: 0;
 }
+
