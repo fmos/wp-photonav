@@ -2,8 +2,8 @@
 /*
  Plugin Name: WP-PhotoNav
  Plugin URI: http://www.fabianmoser.at/wp-photonav
- Description: Provides a scrolling field without scrollbars for huge pictures. Especially usefull for panorama pictures.
- Version: 0.8
+ Description: Provides a scrolling field without scrollbars for huge pictures. Especially useful for panorama pictures.
+ Version: 0.9
  Author: Fabian Moser
  Author URI: http://www.fabianmoser.at
  */
@@ -113,8 +113,9 @@ if (!class_exists("PhotoNav")) {
                 return media_upload_gallery();
             }
 
-            if ( isset($_GET['tab']) && $_GET['tab'] == 'type_url' )
-                return wp_iframe( 'media_upload_type_url_form', 'photonav', $errors, $id );
+            if ( isset($_GET['tab']) && $_GET['tab'] == 'type_url' ) {
+            	return wp_iframe( 'media_upload_type_url_form', 'photonav', $errors, $id );
+            }
 
             // The upload tab is deactivated and there is no upload form available, only the URL form
             return;
@@ -127,6 +128,145 @@ if (!class_exists("PhotoNav")) {
             }
             return $tabs;
         }
+        
+	    /**
+		 * Retrieve HTML for the mode radio buttons with the specified one checked.
+		 * @since 0.9
+		 */
+		function mode_input_field( $post, $check = '' ) {
+			$mode_names = array('move' => __('Move'), 'drag' => __('Drag'), 'drag360' => __('Drag 360°'));
+	
+			if ( empty($check) )
+				$check = 'move';
+	
+			foreach ( $mode_names as $mode => $label ) {
+				$checked = '';
+	
+				$css_id = "photonav-mode-{$mode}-{$post->ID}";
+				// if this size is the default but that's not available, don't select it
+				if ( $mode == $check ) {
+					$checked = " checked='checked'";
+				}
+	
+				$html = "<span class='photonav-mode-item'><input type='radio' name='attachments[$post->ID][photonav-mode]' id='{$css_id}' value='{$mode}'$checked />";
+				$html .= "<label for='{$css_id}'>$label</label>";
+				$html .= '</span>';
+	
+				$out[] = $html;
+			}
+	
+			return array(
+				'label' => __('Mode'),
+				'input' => 'html',
+				'html'  => join("\n", $out),
+			);
+		}
+		
+	    /**
+		 * Retrieve HTML for the popup radio buttons with the specified one checked.
+		 * @since 0.9
+		 */
+    	function popup_input_field( $post, $check = '' ) {
+			$popup_names = array('none' => __('None'), 'colorbox' => __('Colorbox'));
+	
+			if ( empty($check) )
+				$check = 'none';
+	
+			foreach ( $popup_names as $popup => $label ) {
+				$checked = '';
+	
+				$css_id = "photonav-mode-{$popup}-{$post->ID}";
+				// if this size is the default but that's not available, don't select it
+				if ( $popup == $check ) {
+					$checked = " checked='checked'";
+				}
+	
+				$html = "<span class='photonav-popup-item'><input type='radio' name='attachments[$post->ID][photonav-popup]' id='{$css_id}' value='{$popup}'$checked />";
+				$html .= "<label for='{$css_id}'>$label</label>";
+				$html .= '</span>';
+	
+				$out[] = $html;
+			}
+	
+			return array(
+				'label' => __('Popup'),
+				'input' => 'html',
+				'html'  => join("\n", $out),
+			);
+		}
+		
+        /**
+		 * Retrieve HTML for the animate checkbox.
+		 * @since 0.9
+		 */
+    	function animate_input_field( $post, $check = '' ) {	
+			if ( empty($check) )
+				$check = '0';
+
+			$css_id = "photonav-animate-{$post->ID}";
+			$html = "<span class='photonav-animate'><input type='checkbox' name='attachments[$post->ID][photonav-animate]' id='{$css_id}' value='1' /></span>";
+			$out[] = $html;
+	
+			return array(
+				'label' => __('Animate'),
+				'input' => 'html',
+				'html'  => join("\n", $out),
+			);
+		}
+
+        /**
+		 * Retrieve HTML for the frame size.
+		 * @since 0.9
+		 */
+    	function framesize_input_field( $post ) {	
+    		$dim_names = array('height' => __('Height'), 'width' => __('Width'));
+    		
+    		foreach ( $dim_names as $dim => $label ) {
+				$css_id = "photonav-{$dim}-{$post->ID}";
+				
+				$html = "<span class='photonav-frame-item'>";
+				$html .= "<label for='{$css_id}'>$label (px)</label>";
+				$html .= "<input type='text' name='attachments[$post->ID][photonav-$dim]' id='{$css_id}' value='' style='width:100px'' />";
+				$html .= '</span>';
+				
+				$out[] = $html;
+			}
+    			
+			return array(
+				'label' => __('Frame size'),
+				'input' => 'html',
+				'html'  => join("\n", $out),
+			);
+		}
+		
+		
+	    function attachment_fields_edit($form_fields, $post) {
+	        if ( isset($_REQUEST['type']) && ($_REQUEST['type'] == 'photonav') ) {
+				$form_fields['photonav-mode'] = $this->mode_input_field( $post );
+				$form_fields['photonav-framesize'] = $this->framesize_input_field( $post );
+				$form_fields['photonav-popup'] = $this->popup_input_field( $post );
+				$form_fields['photonav-animate'] = $this->animate_input_field( $post );
+				
+				unset($form_fields['align'], $form_fields['image-size'], 
+					$form_fields['url'], $form_fields['post_title'], $form_fields['image_alt'],
+					$form_fields['post_excerpt'], $form_fields['post_content']);
+            }
+			return $form_fields;
+		}
+		
+	    function media_send_to_editor($html, $attachment_id, $attachment) {
+			$post =& get_post($attachment_id);
+			if ( isset($_REQUEST['type']) && ($_REQUEST['type'] == 'photonav') ) {
+				$url = wp_get_attachment_url($attachment_id);
+				$mode = $attachment['photonav-mode'];
+				$popup = $attachment['photonav-popup'];
+				$animate = $attachment['photonav-animate'];
+				$height = $attachment['photonav-height'];
+				$width = $attachment['photonav-width'];
+				return "[photonav url='$url' mode='$mode' popup='$popup' animate='$animate' container_width='$width' container_height='$height']";
+			}
+			return $html;
+		}
 
         // Generate a random string for DOM identification
         function getUniqueId() {
@@ -272,8 +412,12 @@ if (isset($photonav)) {
     add_action('media_buttons', array(&$photonav, 'add_media_button'), 20);
     add_action('media_upload_photonav', array(&$photonav, 'media_upload_photonav'));
     add_filter('media_upload_tabs', array(&$photonav, 'remove_type_tab'));
+    add_filter('attachment_fields_to_edit', array(&$photonav, 'attachment_fields_edit'), 11, 2);
+    add_filter('media_send_to_editor', array(&$photonav, 'media_send_to_editor'), 11, 3);
     add_shortcode('photonav', array(&$photonav, 'parse_shortcode'));
 }
+
+include 'widget.php';
 
 // vim: ai ts=4 sts=4 et sw=4
 ?>
