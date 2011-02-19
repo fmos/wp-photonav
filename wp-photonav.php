@@ -412,8 +412,8 @@ if (isset($photonav)) {
     add_action('media_buttons', array(&$photonav, 'add_media_button'), 20);
     add_action('media_upload_photonav', array(&$photonav, 'media_upload_photonav'));
     add_filter('media_upload_tabs', array(&$photonav, 'remove_type_tab'));
-	add_filter('attachment_fields_to_edit', array(&$photonav, 'attachment_fields_edit'), 11, 2);
-	add_filter('media_send_to_editor', array(&$photonav, 'media_send_to_editor'), 11, 3);
+    add_filter('attachment_fields_to_edit', array(&$photonav, 'attachment_fields_edit'), 11, 2);
+    add_filter('media_send_to_editor', array(&$photonav, 'media_send_to_editor'), 11, 3);
     add_shortcode('photonav', array(&$photonav, 'parse_shortcode'));
 }
 
