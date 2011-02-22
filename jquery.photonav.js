@@ -1,10 +1,8 @@
-// vim: ai ts=4 sts=4 et sw=4
-
 /*
- * 	PhotoNavigation for WordPress
+ * 	PhotoNavigation for WordPress "WP-PhotoNav"
  * 	
- * 	Version 0.8
- * 	Date: 10-11-21
+ * 	Version 0.10
+ * 	Date: 11-02-22
  * 
  */
 
@@ -29,27 +27,27 @@
 
         function initMove(container) {
             container.bind('mousemove', function (event) {
-                var image = $(this).find('img');
+                var image = $(this).find('.image');
                 var offset = $(this).offset();
                 var curX = (this.offsetWidth - image[0].offsetWidth) /
                 (this.offsetWidth / (event.pageX - offset.left));
                 var curY = (this.offsetHeight - image[0].offsetHeight) /
                 (this.offsetHeight / (event.pageY - offset.top));
-                var imageWrapper = $(this).find('.image');
-                imageWrapper.stop();
-                imageWrapper.css('left', curX > 0 ? 0 : curX);
-                imageWrapper.css('top',  curY > 0 ? 0 : curY);
+                var content = $(this).find('.content');
+                content.stop();
+                content.css('left', curX > 0 ? 0 : curX);
+                content.css('top',  curY > 0 ? 0 : curY);
             });
         }
 
         function initDrag(container) {
-            var image = container.find('img');
+            var image = container.find('.image');
             var constraints = [0,0,0,0];
             constraints[0] = container.offset().left - image.width()  + container.width();
             constraints[1] = container.offset().top  - image.height() + container.height();
             constraints[2] = container.offset().left;
             constraints[3] = container.offset().top;
-            container.find('.image').draggable({
+            container.find('.content').draggable({
                 containment: constraints,
                 start: function() {
                     $(this).stop();
@@ -58,15 +56,15 @@
         }
 
         function initDrag360(container) {
-            var image = container.find('img');
+            var image = container.find('.image');
             var constraints = [0,0,0,0];
             constraints[0] = container.offset().left - image.width()  - container.width() ;
             constraints[1] = container.offset().top  - image.height() + container.height();
             constraints[2] = container.offset().left + image.width();
             constraints[3] = container.offset().top;
-            var imageWrapper = container.find('.image');
-            imageWrapper.css('width', image.width() + container.width() + 2);
-            imageWrapper.draggable({
+            var content = container.find('.content');
+            content.css('width', image.width() + container.width() + 2);
+            content.draggable({
                 containment: constraints,
                 start: function() {
                     $(this).stop();
@@ -97,7 +95,7 @@
         // Initializes the ColorBox popup.
         function initColorbox(image, popup, mode) {
             var container = popup.children('.container');
-            var innerImage = container.children('.image');
+            var content = container.children('.content');
             image.colorbox({
                 maxWidth: '100%',
                 maxHeight: '100%',
@@ -106,8 +104,8 @@
                 onOpen: function () {
                     container.css('width', 'auto');
                     container.css('height', image.height());
-                    innerImage.css('background-repeat', 'repeat');
-                    innerImage.css('height', image.height());
+                    content.css('background-repeat', 'repeat');
+                    content.css('height', image.height());
                 },
                 onComplete: function () {
                     var innerHeight = popup.parent().innerHeight();
@@ -124,11 +122,11 @@
             var popup = photonav.find('.popup');
 
             inline.css('display', 'block'); // show PhotoNav instance
-            photonav.find('.image').each(function () {
-                $(this).css('height', $(this).find('img').height());
+            photonav.find('.content').each(function () {
+                $(this).css('height', $(this).find('.image').height());
             });
-            inline.find('.image').each(function () {
-                var minLeft = inline.offset().left - $(this).find('img').width()  + inline.width()
+            inline.find('.content').each(function () {
+                var minLeft = inline.offset().left - $(this).find('.image').width()  + inline.width()
                 if (animate == '1') {
                     $(this).css('left', 0);
                     $(this).animate({
@@ -140,7 +138,7 @@
             initMode(inline, mode);
 
             if (popup_type == 'colorbox') {
-                initColorbox(inline.find('img'), popup, mode);
+                initColorbox(inline.find('.image'), popup, mode);
             }
         }
 
