@@ -312,7 +312,7 @@ if (!class_exists("PhotoNav")) {
         </div>
     </div>
     <div style="display: none;">
-        <div class="popup">
+        <div class="photonav popup">
             <div class="container" style="display: block; overflow: hidden;">
                 <div class="content" style="background-image: url(%PHOTONAV_URL%);">
                     <img id="photonav-image" class="image colorbox-off" src="%PHOTONAV_URL%">

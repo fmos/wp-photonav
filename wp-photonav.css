@@ -1,16 +1,16 @@
-.photonav .container {
+.photonav > .container {
     overflow: hidden;
     display: none;
 }
 
-.photonav .content {
+.photonav > .container > .content {
     position: relative;
     background-position: top left;
     background-repeat: repeat-x;
 }
 
 /* Override theme settings for img elements using 3 classes and 1 id for precedence */
-.photonav .container .content #photonav-image {
+.photonav > .container > .content > #photonav-image {
     margin: 0;
     border: 0 none;
     max-height: none;

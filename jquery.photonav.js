@@ -129,12 +129,12 @@
 
         function createPhotoNav(photonav, mode, popup_type, animate) {
             var inline = photonav.children('.container');
+        	var image = inline.find('.image');
             
             inline.css('display', 'block'); // show PhotoNav instance
             
         	// Copy the image size to the content div
             photonav.find('.content').each(function () {
-            	var image = $(this).find('.image');
                 $(this).css('height', image.height());
                 $(this).css('width', image.width());
             });
@@ -146,7 +146,7 @@
             }
 
             if (popup_type == 'colorbox') {
-                initColorbox(inline.find('.image'), photonav.find('.popup'), mode);
+                initColorbox(image, photonav.find('.popup'), mode);
             }
         }
 
