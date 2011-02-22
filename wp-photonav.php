@@ -13,9 +13,8 @@ if (!class_exists("PhotoNav")) {
     class PhotoNav {
 
         function init() {
-            $baseDir = "/".PLUGINDIR."/wp-photonav";
-            wp_enqueue_script('photonav', $baseDir."/jquery.photonav.js", array('jquery', 'jquery-ui-draggable'), '0.7');
-            wp_enqueue_style('photonav_style', $baseDir."/wp-photonav.css", array(), "0.7");
+            wp_enqueue_script('jquery-photonav');
+            wp_enqueue_style('wp-photonav');
             $this->register_fullscreen_media_button();
         }
 
@@ -408,6 +407,10 @@ function type_url_form_photonav() {
 }
 
 if (isset($photonav)) {
+    $baseDir = "/".PLUGINDIR."/wp-photonav";
+    wp_register_script('jquery-photonav', $baseDir."/jquery.photonav.js", array('jquery', 'jquery-ui-draggable'), '0.10');
+    wp_register_style('wp-photonav', $baseDir."/wp-photonav.css", array(), '0.10');
+	
     add_action('init', array(&$photonav, 'init'));
     add_action('media_buttons', array(&$photonav, 'add_media_button'), 20);
     add_action('media_upload_photonav', array(&$photonav, 'media_upload_photonav'));

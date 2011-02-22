@@ -92,6 +92,16 @@
             }
         }
 
+        // Sets up the animation
+        function initAnimation(container) {
+        	container.find('.content').each(function () {
+            	var image = $(this).find('.image')
+                var minLeft = container.offset().left - image.width()  + container.width()
+                $(this).css('left', 0);
+                $(this).animate({left: minLeft}, -10 * minLeft, 'linear');
+            });
+        }
+        
         // Initializes the ColorBox popup.
         function initColorbox(image, popup, mode) {
             var container = popup.children('.container');
@@ -119,26 +129,24 @@
 
         function createPhotoNav(photonav, mode, popup_type, animate) {
             var inline = photonav.children('.container');
-            var popup = photonav.find('.popup');
-
+            
             inline.css('display', 'block'); // show PhotoNav instance
+            
+        	// Copy the image size to the content div
             photonav.find('.content').each(function () {
-                $(this).css('height', $(this).find('.image').height());
-            });
-            inline.find('.content').each(function () {
-                var minLeft = inline.offset().left - $(this).find('.image').width()  + inline.width()
-                if (animate == '1') {
-                    $(this).css('left', 0);
-                    $(this).animate({
-                        left: minLeft
-                    }, -10*minLeft, 'linear');
-                }
+            	var image = $(this).find('.image');
+                $(this).css('height', image.height());
+                $(this).css('width', image.width());
             });
 
             initMode(inline, mode);
+            
+            if (animate == '1') {
+            	initAnimation(inline);
+            }
 
             if (popup_type == 'colorbox') {
-                initColorbox(inline.find('.image'), popup, mode);
+                initColorbox(inline.find('.image'), photonav.find('.popup'), mode);
             }
         }
 

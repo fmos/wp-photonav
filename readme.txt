@@ -27,7 +27,8 @@ For usage examples and documentation, please visit the [plugin page](http://www.
 == Changelog ==
 
 = 0.10 =
-* Bugfix: Increased precedence of the img CSS properties to 1 id + 3 classes 
+* Bugfix: Increased precedence of the img CSS properties to 1 id + 3 classes
+* Generalised CSS and cleaned up JavaScript code
 
 = 0.9 =
 * Feature: PhotoNav widget (by Norman Stanke)
