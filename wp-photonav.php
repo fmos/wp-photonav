@@ -1,11 +1,11 @@
 <?php 
 /*
  Plugin Name: WP-PhotoNav
- Plugin URI: http://www.fabianmoser.at/wp-photonav
+ Plugin URI: http://fabianmoser.at/wp-photonav
  Description: Provides a scrolling field without scrollbars for huge pictures. Especially useful for panorama pictures.
  Version: 0.10
  Author: Fabian Moser
- Author URI: http://www.fabianmoser.at
+ Author URI: http://fabianmoser.at
  */
 
 if (!class_exists("PhotoNav")) {

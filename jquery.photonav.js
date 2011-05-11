@@ -2,7 +2,7 @@
  * 	PhotoNavigation for WordPress "WP-PhotoNav"
  * 	
  * 	Version 0.10
- * 	Date: 11-02-22
+ * 	Date: 11-05-10
  * 
  */
 
@@ -132,6 +132,8 @@
         	var image = inline.find('.image');
             
             inline.css('display', 'block'); // show PhotoNav instance
+            
+            // TODO move the code below to an image.load() handler
             
         	// Copy the image size to the content div
             photonav.find('.content').each(function () {
