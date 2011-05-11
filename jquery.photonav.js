@@ -147,8 +147,11 @@
 
         function createPhotoNav(photonav, mode, popup_type, animate) {
             var inline = photonav.children('.container');
+            var image = inline.find('.image'); 
             inline.css('display', 'block'); // show PhotoNav instance
-        	inline.find('.image').load(function () {
+            loadPhotoNav(photonav, inline, image, mode, popup_type, animate);
+        	image.load(function () {
+        		// Update the parameters when the image is loaded completely
             	loadPhotoNav(photonav, inline, $(this), mode, popup_type, animate);
             });
         }
