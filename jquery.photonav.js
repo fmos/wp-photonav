@@ -126,15 +126,8 @@
                 }
             });
         }
-
-        function createPhotoNav(photonav, mode, popup_type, animate) {
-            var inline = photonav.children('.container');
-        	var image = inline.find('.image');
-            
-            inline.css('display', 'block'); // show PhotoNav instance
-            
-            // TODO move the code below to an image.load() handler
-            
+        
+        function loadPhotoNav(photonav, inline, image, mode, popup_type, animate) {
         	// Copy the image size to the content div
             photonav.find('.content').each(function () {
                 $(this).css('height', image.height());
@@ -150,6 +143,14 @@
             if (popup_type == 'colorbox') {
                 initColorbox(image, photonav.find('.popup'), mode);
             }
+        }
+
+        function createPhotoNav(photonav, mode, popup_type, animate) {
+            var inline = photonav.children('.container');
+            inline.css('display', 'block'); // show PhotoNav instance
+        	inline.find('.image').load(function () {
+            	loadPhotoNav(photonav, inline, $(this), mode, popup_type, animate);
+            });
         }
 
         this.each(function() {
