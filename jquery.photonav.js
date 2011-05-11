@@ -26,14 +26,14 @@
         if (settings) $.extend(config, settings);
 
         function initMove(container) {
+        	var image = container.find('.image');
+            var content = container.find('.content');
             container.bind('mousemove', function (event) {
-                var image = $(this).find('.image');
                 var offset = $(this).offset();
                 var curX = (this.offsetWidth - image[0].offsetWidth) /
                 (this.offsetWidth / (event.pageX - offset.left));
                 var curY = (this.offsetHeight - image[0].offsetHeight) /
                 (this.offsetHeight / (event.pageY - offset.top));
-                var content = $(this).find('.content');
                 content.stop();
                 content.css('left', curX > 0 ? 0 : curX);
                 content.css('top',  curY > 0 ? 0 : curY);
@@ -95,8 +95,8 @@
         // Sets up the animation
         function initAnimation(container) {
         	container.find('.content').each(function () {
-            	var image = $(this).find('.image')
-                var minLeft = container.offset().left - image.width()  + container.width()
+            	var image = $(this).find('.image');
+                var minLeft = container.offset().left - image.width()  + container.width();
                 $(this).css('left', 0);
                 $(this).animate({left: minLeft}, -10 * minLeft, 'linear');
             });
