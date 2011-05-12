@@ -39,7 +39,7 @@ function PhotoNav(elem) {
 			var curX = (event.pageX - offset.left)
 					* (1 - image[0].offsetWidth / this.offsetWidth);
 			var curY = (event.pageY - offset.top)
-					* (1 - photonav.offsetHeight / this.offsetHeight);
+					* (1 - image[0].offsetHeight / this.offsetHeight);
 			content.stop();
 			content.css('left', curX > 0 ? 0 : curX);
 			content.css('top', curY > 0 ? 0 : curY);
