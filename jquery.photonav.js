@@ -27,15 +27,15 @@ function PhotoNav(elem) {
 			width = image.width();
 		}
 		elem.find('.content').each(function() {
-			$(this).css('height', image.height());
-			$(this).css('width', image.width());
+			jQuery(this).css('height', image.height());
+			jQuery(this).css('width', image.width());
 		});
 	};
 
 	this.initMove = function(container) {
 		var content = container.find('.content');
 		container.mousemove(function(event) {
-			var offset = $(this).offset();
+			var offset = jQuery(this).offset();
 			var curX = (event.pageX - offset.left)
 					* (1 - image[0].offsetWidth / this.offsetWidth);
 			var curY = (event.pageY - offset.top)
@@ -53,7 +53,7 @@ function PhotoNav(elem) {
 		var content = container.find('.content');
 		content.draggable({
 			start : function() {
-				$(this).stop();
+				jQuery(this).stop();
 			}
 		});
 		function updateConstraints() {
@@ -77,7 +77,7 @@ function PhotoNav(elem) {
 		content.css('width', image.width() + container.width() + 2);
 		content.draggable({
 			start : function() {
-				$(this).stop();
+				jQuery(this).stop();
 			},
 			drag : function(e, ui) {
 				var newleft = ui.position.left % image.width();
@@ -166,22 +166,20 @@ function PhotoNav(elem) {
 	};
 };
 
-(function($) {
-	$.fn.photoNav = function(settings) {
-		var config = {
-			mode : 'move',
-			popup : 'none',
-			animate : '0'
-		};
-
-		if (settings)
-			$.extend(config, settings);
-
-		this.each(function() {
-			var instance = new PhotoNav($(this));
-			instance.init(config['mode'], config['popup'], config['animate']);
-		});
-
-		return this;
+jQuery.fn.photoNav = function(settings) {
+	var config = {
+		mode : 'move',
+		popup : 'none',
+		animate : '0'
 	};
-})(jQuery);
+
+	if (settings)
+		jQuery.extend(config, settings);
+
+	this.each(function() {
+		var instance = new PhotoNav(jQuery(this));
+		instance.init(config['mode'], config['popup'], config['animate']);
+	});
+
+	return this;
+};
