@@ -296,6 +296,12 @@ if (!class_exists("PhotoNav")) {
             } else if (is_numeric($a['container_height'])) {
                 $a['container_height'] = $a['container_height']."px";
             }
+            if ($a['container_height'] == '') {
+            	$a['container_height'] = 'auto';
+            }
+            if ($a['container_width'] == '') {
+            	$a['container_width'] = 'auto';
+            }
             $valid_modes = array('move', 'drag', 'drag360');
             if (!in_array($a['mode'], $valid_modes)) {
                 $a['mode'] = 'move';
