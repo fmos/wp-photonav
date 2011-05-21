@@ -147,12 +147,11 @@
 		};
 
 		// Sets up the animation
-		this.initAnimation = function() {
+		this.initAnimation = function(container) {
 			inline.find('.content').each(
 					function() {
 						var image = $(this).find('.image');
-						var minLeft = container.offset().left - self.getImageWidth()
-								+ container.width();
+						var minLeft = container.offset().left - self.getImageWidth() + container.width();
 						$(this).css('left', 0);
 						$(this).animate({
 							left : minLeft
@@ -190,7 +189,7 @@
 			self.updateContent();
 			self.initMode(inline, mode);
 			if (animate == '1')
-				self.initAnimation();
+				self.initAnimation(inline);
 			if (popup_type == 'colorbox')
 				self.initColorbox(elem.find('.popup'), mode);
 		};
