@@ -58,19 +58,19 @@
 				self.updateContent();
 				content.css('left', Math.min(0,(cw-iw)/2));
 				content.css('top', Math.min(0,(ch-ih)/2));
+				return [0, cw-iw];
 			};
-			updateMove();
+			var anirange = updateMove();
 			container.mousemove(function(event) {
 				var offset = $(this).offset();
-				var curX = (event.pageX - offset.left)
-						* (1 - self.getImageWidth() / this.offsetWidth);
-				var curY = (event.pageY - offset.top)
-						* (1 - self.getImageHeight() / this.offsetHeight);
+				var curX = (event.pageX - offset.left) * (1 - self.getImageWidth() / this.offsetWidth);
+				var curY = (event.pageY - offset.top) * (1 - self.getImageHeight() / this.offsetHeight);
 				content.stop();
 				content.css('left', curX > 0 ? 0 : curX);
 				content.css('top', curY > 0 ? 0 : curY);
 			});
 			image.load(updateMove);
+			return anirange;
 		};
 
 		this.initDrag = function(container) {
@@ -88,8 +88,9 @@
 				wrapper.css('margin-top', (ch-wh)/2);
 				content.css('left', Math.max(0,(iw-cw)/2));
 				content.css('top', Math.max(0,(ih-ch)/2));
+				return [iw-cw, 0];
 			}
-			updateDrag();
+			var anirange = updateDrag();
 			content.draggable({
 				start : function() {
 					$(this).stop(); // Stop animation
@@ -97,6 +98,7 @@
 				containment : 'parent'
 			});
 			image.load(updateDrag);
+			return anirange;
 		};
 
 		this.initDrag360 = function(container) {
@@ -114,8 +116,9 @@
 				self.updateContent(iw + cw + 2);
 				content.css('left', Math.max(0,(iw+cw)/2));
 				content.css('top', Math.max(0,(ih-ch)/2));
+				return [iw, cw];
 			}
-			updateDrag360();
+			var anirange = updateDrag360();
 			content.draggable({
 				start : function() {
 					$(this).stop();
@@ -132,30 +135,31 @@
 				containment : 'parent'
 			});
 			image.load(updateDrag360);
+			return anirange;
 		};
 
 		// Calls the appropriate init method above depending on the mode
 		// parameter.
 		this.initMode = function(container, mode) {
 			if (mode == 'move') {
-				self.initMove(container);
+				return self.initMove(container);
 			} else if (mode == 'drag') {
-				self.initDrag(container);
+				return self.initDrag(container);
 			} else if (mode == 'drag360') {
-				self.initDrag360(container);
+				return self.initDrag360(container);
 			}
 		};
 
 		// Sets up the animation
-		this.initAnimation = function(container) {
+		this.initAnimation = function(container, anirange) {
 			inline.find('.content').each(
 					function() {
 						var image = $(this).find('.image');
 						var minLeft = container.offset().left - self.getImageWidth() + container.width();
-						$(this).css('left', 0);
+						$(this).css('left', anirange[0]);
 						$(this).animate({
-							left : minLeft
-						}, -10 * minLeft, 'linear');
+							left : anirange[1]
+						}, 10 * Math.abs(anirange[1] - anirange[0]), 'linear');
 					});
 		};
 
@@ -187,9 +191,9 @@
 		this.init = function(mode, popup_type, animate) {
 			inline.css('display', 'block'); // unhide
 			self.updateContent();
-			self.initMode(inline, mode);
+			anirange = self.initMode(inline, mode);
 			if (animate == '1')
-				self.initAnimation(inline);
+				self.initAnimation(inline, anirange);
 			if (popup_type == 'colorbox')
 				self.initColorbox(elem.find('.popup'), mode);
 		};
