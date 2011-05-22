@@ -1,8 +1,8 @@
 /*
  * 	PhotoNavigation for WordPress "WP-PhotoNav"
  * 	
- * 	Version 0.10
- * 	Date: 11-05-10
+ * 	Version 1.0
+ * 	Date: 11-05-22
  * 
  */
 
