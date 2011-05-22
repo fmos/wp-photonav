@@ -326,7 +326,7 @@ if (!class_exists("PhotoNav")) {
             </div>
         </div>
     </div>
-    <script type="text/javascript">jQuery(document).ready(function(){jQuery("#%PHOTONAV_ID%").photoNav({mode:"%PHOTONAV_MODE%",popup:"%PHOTONAV_POPUP%",animate:"%PHOTONAV_ANIMATE%"});});</script>
+    <script type="text/javascript">jQuery(document).ready(function(){jQuery("#%PHOTONAV_ID%").photoNav({id:"%PHOTONAV_ID%",mode:"%PHOTONAV_MODE%",popup:"%PHOTONAV_POPUP%",animate:"%PHOTONAV_ANIMATE%"});});</script>
 </div>
 PHOTONAVTEMPLATE;
             $template_photonav = str_replace("%PHOTONAV_ID%", $id, $template_photonav);
