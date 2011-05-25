@@ -347,7 +347,7 @@ if (class_exists('PhotoNav')) {
     $photonav = new PhotoNav();
 }
 
-load_plugin_textdomain('wp-photonav', $baseDir, 'wp-photonav');
+load_plugin_textdomain( 'wp-photonav', false, dirname( plugin_basename( __FILE__ ) ) );
 
 function type_url_form_photonav() {
     return '

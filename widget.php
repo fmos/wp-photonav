@@ -5,8 +5,8 @@ if (!class_exists("PhotoNavWidget")) {
     class PhotoNavWidget {
     	
 		function init() {
-			register_sidebar_widget("WP-Photonav-Widget", array(&$this, 'render'));    
-			register_widget_control( "WP-Photonav-Widget", array(&$this, 'control'));
+			wp_register_sidebar_widget("wp-photonav_widget_1", "WP-Photonav-Widget", array(&$this, 'render'));    
+			wp_register_widget_control("wp-photonav_widget_1", "WP-Photonav-Widget", array(&$this, 'control'));
 			
 			return;
 		}
