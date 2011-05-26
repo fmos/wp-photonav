@@ -203,8 +203,13 @@
 			anirange = self.initMode(inline, mode);
 			if (animate == '1')
 				self.initAnimation(inline, anirange);
-			if (popup_type == 'colorbox')
-				self.initColorbox(elem.find('.popup'), id, mode);
+			if (popup_type == 'colorbox') {
+				try {
+					self.initColorbox(elem.find('.popup'), id, mode);
+				} catch (e) {
+					console.log("Popups in WP-PhotoNav require the jQuery Colobox plugin.");
+				}
+			}
 		};
 	};
 
