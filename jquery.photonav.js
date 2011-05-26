@@ -111,7 +111,6 @@
 			function updateDrag360() {
 				var iw = self.getImageWidth(), cw = container.width();
 				var ww = 2*iw + cw + 4;
-				console.log("updateDrag360", cw, ww, container, $.colorbox.element());
 				var ih = self.getImageHeight(), ch = container.height();
 				var wh = 2*ih - ch;
 				wrapper.width(ww);
