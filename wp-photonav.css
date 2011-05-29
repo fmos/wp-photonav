@@ -1,16 +1,17 @@
-/* Override theme settings for div elements */
-#content .photonav div {
-	padding: 0;
-	margin: 0;
+.photonav div, .photonav img {
+	border: 0 none !important;
+	padding: 0 !important;
 }
 
 .photonav > .container {
     overflow: hidden;
     display: none;
+    margin: 0;
 }
 
 .photonav > .container > .dragconstraint {
 	position: relative;
+    margin: 0;
 }
 
 .photonav > .container > .content,
@@ -18,15 +19,15 @@
     position: relative;
     background-position: top left;
     background-repeat: repeat-x;
+    margin: 0;
 }
 
 /* Override theme settings for img elements using 3 classes and 1 id for precedence */
 .photonav > .container > .content > #photonav-image,
 .photonav > .container > .dragconstraint > .content > #photonav-image {
-    margin: 0;
-    border: 0 none;
     max-height: none;
     max-width: none;
     height: auto;
     width: auto;
+    margin: 0;
 }
