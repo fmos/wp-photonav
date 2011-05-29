@@ -186,7 +186,6 @@
 				},
 				onComplete : function() {
 					$('#'+popupid).each(function () {
-						console.log("onComplete", $(this));
 						var container = $(this).children('.container');
 						var innerHeight = $(this).parent().innerHeight();
 						if (innerHeight < $(this).height()) {
@@ -204,10 +203,8 @@
 			if (animate == '1')
 				self.initAnimation(inline, anirange);
 			if (popup_type == 'colorbox') {
-				try {
+				if ($().colorbox) {
 					self.initColorbox(elem.find('.popup'), id, mode);
-				} catch (e) {
-					console.log("Popups in WP-PhotoNav require the jQuery Colobox plugin.");
 				}
 			}
 		};
