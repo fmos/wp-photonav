@@ -16,10 +16,10 @@ if (!class_exists("PhotoNavWidget")) {
 			$options = $newoptions = get_option('photonavwidget_widget');
 			
 			// title
-			echo'<h2>'.attribute_escape($options['title']).'</H2>';
+			echo'<h2>'.esc_attr($options['title']).'</H2>';
 			
 			// shortcode
-			echo do_shortcode("[photonav url='".attribute_escape($options['url'])."' width=".attribute_escape($options['width'])." height=".attribute_escape($options['height'])."]");
+			echo do_shortcode("[photonav url='".esc_attr($options['url'])."' width=".esc_attr($options['width'])." height=".esc_attr($options['height'])."]");
 			
 			return;
 		}
@@ -39,10 +39,10 @@ if (!class_exists("PhotoNavWidget")) {
 			}
 	
 			// set variables
-			$title = attribute_escape($options['title']);
-			$url = attribute_escape($options['url']);
-			$width = attribute_escape($options['width']);
-			$height = attribute_escape($options['height']);
+			$title = esc_attr($options['title']);
+			$url = esc_attr($options['url']);
+			$width = esc_attr($options['width']);
+			$height = esc_attr($options['height']);
 
 			// set defaults
 			if ($url == '')
