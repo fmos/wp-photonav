@@ -6,6 +6,8 @@
  Version: 1.0
  Author: Fabian Moser
  Author URI: http://fabianmoser.at
+ License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ Text Domain: wp-photonav
  */
 
 if (!class_exists("PhotoNav")) {

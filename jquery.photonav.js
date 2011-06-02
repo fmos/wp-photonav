@@ -1,9 +1,11 @@
 /*
  * 	PhotoNavigation for WordPress "WP-PhotoNav"
  * 	
- * 	Version 1.0
+ * 	Version: 1.0
  * 	Date: 11-06-01
- * 
+ *  Author: Fabian Moser
+ *  Author URI: http://fabianmoser.at
+ *  License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 
 /*  Credits:
@@ -11,8 +13,7 @@
  * 	PhotoNavigation the jQuery version
  * 	A Javascript Module by Gaya Kessler
  * 	Version 1.0
- * 	Date: 09-04-09
- * 
+ * 	Date: 09-04-09 
  */
 
 (function($) {$.fn.photoNav = function(settings) {
