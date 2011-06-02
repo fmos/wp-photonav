@@ -26,7 +26,7 @@
 			ed.onNodeChange.add(function(ed, cm, n) {
 				// cm.setActive('photonav', n.nodeName == 'IMG');
 			});
-			
+
 			// Add Media button to fullscreen
 			ed.onBeforeExecCommand.add(function(ed, cmd, ui, val) {
 				if ( 'mceFullScreen' != cmd ) return;
@@ -59,9 +59,9 @@
 			return {
 				longname : 'WP-PhotoNav plugin',
 				author : 'Fabian Moser',
-				authorurl : 'http://www.fabianmoser.at',
-				infourl : 'http://www.fabianmoser.at/wp-photonav',
-				version : "0.7"
+				authorurl : 'http://fabianmoser.at',
+				infourl : 'http://fabianmoser.at/wp-photonav',
+				version : "1.0"
 			};
 		}
 	});
