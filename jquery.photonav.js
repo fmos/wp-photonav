@@ -2,7 +2,7 @@
  * 	PhotoNavigation for WordPress "WP-PhotoNav"
  * 	
  * 	Version 1.0
- * 	Date: 11-05-22
+ * 	Date: 11-06-01
  * 
  */
 
@@ -17,21 +17,21 @@
 
 (function($) {$.fn.photoNav = function(settings) {
 	var config = {
-		id : false,
-		mode : 'move',
-		popup : 'none',
-		animate : '0'
+			id : false,
+			mode : 'move',
+			popup : 'none',
+			animate : '0'
 	};
 
 	if (settings)
 		$.extend(config, settings);
-	
+
 	function PhotoNav(elem) {
 		var self = this;
 
 		var inline = elem.children('.container');
 		var image = inline.find('.image');
-		
+
 		this.getImageWidth = function() {
 			return image[0].scrollWidth;
 		};
