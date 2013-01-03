@@ -15,7 +15,7 @@ Additional feature include an integration with jQuery Colorbox and animated scro
 
 Suitable panorama pictures can be created e.g. using the [Hugin](http://hugin.sourceforge.net/) panorama photo stitcher.
 
-For usage examples and documentation, please visit the [plugin page](http://www.fabianmoser.at/wp-photonav).
+For usage examples and documentation, please visit the [plugin page](http://fmos.at/wp-photonav).
 
 == Installation ==
 
