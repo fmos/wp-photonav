@@ -11,11 +11,13 @@ Provides a scrolling field without scrollbars for pictures with huge horizontal 
 == Description ==
 
 This plugin is a rewrite of a JavaScript snippet called PhotoNav. It provides for easy integration of panaorama pictures in a Wordpress page throught using shortcode. The user can "rotate" the view of the panorama by moving the mouse over the image area or dragging the image.
-Additional feature include an integration with jQuery Colorbox and animated scrolling.
+Additional features include an integration with jQuery Colorbox and animated scrolling.
 
-Suitable panorama pictures can be created e.g. using the [Hugin](http://hugin.sourceforge.net/) panorama photo stitcher.
+Further reading:
 
-For usage examples and documentation, please visit the [plugin page](http://fmos.at/wp-photonav).
+*  Suitable panorama pictures can be created e.g. using the [Hugin](http://hugin.sourceforge.net/) panorama photo stitcher
+*  For usage examples and documentation, please visit the [plugin page](http://fmos.at/wp-photonav)
+*  If you are interested in contributing, feel free to fork on [GitHub](https://github.com/fmos/wp-photonav)
 
 == Installation ==
 
@@ -26,7 +28,7 @@ For usage examples and documentation, please visit the [plugin page](http://fmos
 
 == Changelog ==
 
-= 1.0.1= 
+= 1.0.1 =
 * Warning: Updating API calls to current standards (fix WP_DEBUG warnings)
 * Workaround: Fixed dragging when using TwentTwelve
 
