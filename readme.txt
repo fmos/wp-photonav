@@ -3,7 +3,7 @@ Contributors: fmos, Norman Stanke
 Donate link: 
 Tags: panorama, image, photo, picture, photonav, jquery, scroll, 360, colorbox, autoscroll
 Requires at least: 2.8
-Tested up to: 3.1.3
+Tested up to: 3.5.1
 Stable tag: trunk
 
 Provides a scrolling field without scrollbars for pictures with huge horizontal dimensions. Especially useful for panorama pictures.
@@ -15,7 +15,7 @@ Additional feature include an integration with jQuery Colorbox and animated scro
 
 Suitable panorama pictures can be created e.g. using the [Hugin](http://hugin.sourceforge.net/) panorama photo stitcher.
 
-For usage examples and documentation, please visit the [plugin page](http://www.fabianmoser.at/wp-photonav).
+For usage examples and documentation, please visit the [plugin page](http://fmos.at/wp-photonav).
 
 == Installation ==
 
@@ -25,6 +25,10 @@ For usage examples and documentation, please visit the [plugin page](http://www.
 4. Include PhotoNav in your post by entering `[photonav url='/wp-content/uploads/2010/08/panorama.jpg']`.
 
 == Changelog ==
+
+= 1.0.1= 
+* Warning: Updating API calls to current standards (fix WP_DEBUG warnings)
+* Workaround: Fixed dragging when using TwentTwelve
 
 = 1.0 =
 * Bugfix: Increased precedence of the img CSS properties to 1 id + 3 classes
