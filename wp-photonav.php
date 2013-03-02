@@ -1,11 +1,11 @@
 <?php
 /*
  Plugin Name: WP-PhotoNav
- Plugin URI: http://fabianmoser.at/wp-photonav
+ Plugin URI: http://fmos.at/wp-photonav
  Description: Provides a scrolling field without scrollbars for huge pictures. Especially useful for panorama pictures.
- Version: 1.0
- Author: Fabian Moser
- Author URI: http://fabianmoser.at
+ Version: 1.0.1
+ Author: Fabian Stanke
+ Author URI: http://fmos.at
  License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  Text Domain: wp-photonav
  */
@@ -15,9 +15,16 @@ if (!class_exists("PhotoNav")) {
 	class PhotoNav {
 
 		function init() {
+			$this->register_fullscreen_media_button();
+		}
+
+		// Registers the custom JavaScript and CSS
+		function register_resources() {
+			$baseDir = "/".PLUGINDIR."/wp-photonav";
+			wp_register_script('jquery-photonav', $baseDir."/jquery.photonav.js", array('jquery', 'jquery-ui-draggable'), '1.0.1');
+			wp_register_style('wp-photonav', $baseDir."/wp-photonav.css", array(), '1.0.1');
 			wp_enqueue_script('jquery-photonav');
 			wp_enqueue_style('wp-photonav');
-			$this->register_fullscreen_media_button();
 		}
 
 		// Registers the TinyMCE plugin which renders the media button in fullscreen mode
@@ -51,7 +58,7 @@ if (!class_exists("PhotoNav")) {
 			$uploading_iframe_ID = (int) (0 == $post_ID ? $temp_ID : $post_ID);
 			$media_upload_iframe_src = "media-upload.php?post_id=$uploading_iframe_ID";
 			$photonav_upload_iframe_src = apply_filters("photonav_upload_iframe_src", "$media_upload_iframe_src&amp;type=photonav&amp;tab=type_url");
-			$photonav_title = "photonav.add_photonav";
+			$image_title = "photonav.add_photonav";
 			$out = "<a href='{$photonav_upload_iframe_src}&amp;TB_iframe=true' id='add_photonav' class='thickbox' title='$image_title' onclick='return false;'><img src='".WP_PLUGIN_URL."/wp-photonav/media-button.gif' alt='$image_title' /></a>";
 			print($out);
 		}
@@ -415,11 +422,8 @@ function type_url_form_photonav() {
 }
 
 if (isset($photonav)) {
-	$baseDir = "/".PLUGINDIR."/wp-photonav";
-	wp_register_script('jquery-photonav', $baseDir."/jquery.photonav.js", array('jquery', 'jquery-ui-draggable'), '1.0');
-	wp_register_style('wp-photonav', $baseDir."/wp-photonav.css", array(), '1.0');
-
 	add_action('init', array(&$photonav, 'init'));
+	add_action('wp_enqueue_scripts', array(&$photonav, 'register_resources'));
 	add_action('media_buttons', array(&$photonav, 'add_media_button'), 20);
 	add_action('media_upload_photonav', array(&$photonav, 'media_upload_photonav'));
 	add_filter('media_upload_tabs', array(&$photonav, 'remove_type_tab'));
