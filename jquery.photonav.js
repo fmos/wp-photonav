@@ -31,105 +31,95 @@
 		var self = this;
 
 		var inline = elem.children('.container');
-		var image = inline.find('.image');
-
-		this.getImageWidth = function() {
-			return image[0].scrollWidth;
-		};
-		this.getImageHeight = function() {
-			return image[0].scrollHeight;
-		};
-
-		this.updateContent = function(content, width) {
-			// Copy the image size to all content DIVs
-			if (width == undefined) {
-				width = self.getImageWidth();
-			}
-			content.css('height', self.getImageHeight());
-			content.css('width', width);
-		};
+		var image = inline.find('.image')[0];
 
 		this.initMove = function(container) {
+			console.log(config.id + " initMove");
 			var content = container.find('.content');
 			function updateMove() {
-				var iw = self.getImageWidth(), cw = container.width();
-				var ih = self.getImageHeight(), ch = container.height();
-				self.updateContent(content);
+				console.log(config.id + " updateMove");
+				var iw = image.scrollWidth, cw = container.width();
+				var ih = image.scrollHeight, ch = container.height();
+				content.width(iw);
+				content.height(ih);
 				content.css('left', Math.min(0,(cw-iw)/2));
 				content.css('top', Math.min(0,(ch-ih)/2));
 				return [0, cw-iw];
 			};
-			var anirange = updateMove();
 			container.mousemove(function(event) {
 				var offset = $(this).offset();
-				var curX = (event.pageX - offset.left) * (1 - self.getImageWidth() / this.offsetWidth);
-				var curY = (event.pageY - offset.top) * (1 - self.getImageHeight() / this.offsetHeight);
+				var curX = (event.pageX - offset.left) * (1 - image.scrollWidth / this.offsetWidth);
+				var curY = (event.pageY - offset.top) * (1 - image.scrollHeight / this.offsetHeight);
 				content.stop();
 				content.css('left', curX > 0 ? 0 : curX);
 				content.css('top', curY > 0 ? 0 : curY);
 			});
-			content.children('.image').load(updateMove);
-			return anirange;
+			return updateMove;
 		};
 
 		this.initDrag = function(container) {
+			console.log(config.id + " initDrag");
 			var content = container.find('.content');
 			var wrapper = content.parent();
 			if (wrapper.attr('class') != 'dragconstraint') {
 				wrapper = content.wrap('<div class="dragconstraint" />').parent();
 			}
 			function updateDrag() {
-				self.updateContent(content);
-				var iw = self.getImageWidth(), cw = container.width();
+				console.log(config.id + " updateDrag");
+				var iw = image.scrollWidth, cw = container.width();
 				var ww = 2*iw - cw;
-				var ih = self.getImageHeight(), ch = container.height();
+				var ih = image.scrollHeight, ch = container.height();
 				var wh = 2*ih - ch;
+				content.width(iw);
+				content.height(ih);
 				wrapper.width(ww);
 				wrapper.css('margin-left', (cw-ww)/2);
 				wrapper.height(wh);
 				wrapper.css('margin-top', (ch-wh)/2);
 				content.css('left', Math.max(0,(iw-cw)/2));
 				content.css('top', Math.max(0,(ih-ch)/2));
-				return [iw-cw, 0];
+				console.log("updateDrag : iw=" + iw + ", cw=" + cw);
+				return [iw-cw,0];
 			}
-			var anirange = updateDrag();
+			//updateDrag();
 			content.draggable({
 				start : function() {
 					$(this).stop(); // Stop animation
 				},
 				containment : 'parent'
 			});
-			content.children('.image').load(updateDrag);
-			return anirange;
+			return updateDrag;
 		};
 
 		this.initDrag360 = function(container) {
+			console.log(config.id + " initDrag360");
 			var content = container.find('.content');
 			var wrapper = content.parent();
 			if (wrapper.attr('class') != 'dragconstraint') {
 				wrapper = content.wrap('<div class="dragconstraint" />').parent();
 			}
 			function updateDrag360() {
-				var iw = self.getImageWidth(), cw = container.width();
+				console.log(config.id + " updateDrag360");
+				var iw = image.scrollWidth, cw = container.width();
 				var ww = 2*iw + cw + 4;
-				var ih = self.getImageHeight(), ch = container.height();
+				var ih = image.scrollHeight, ch = container.height();
 				var wh = 2*ih - ch;
 				wrapper.width(ww);
 				wrapper.css('margin-left', (cw-ww)/2);
 				wrapper.height(wh);
 				wrapper.css('margin-top', (ch-wh)/2);
-				self.updateContent(content, iw + cw + 2);
-				content.css('left', Math.max(0,(iw+cw)/2));
-				content.css('top', Math.max(0,(ih-ch)/2));
+				content.width(iw + cw + 2);
+				content.height(ih);
+				content.left(Math.max(0,(iw+cw)/2));
+				content.top(Math.max(0,(ih-ch)/2));
 				return [iw, cw];
 			}
-			var anirange = updateDrag360();
 			content.draggable({
 				start : function() {
 					$(this).stop();
 				},
 				drag : function(e, ui) {
-					var iw = self.getImageWidth();
+					var iw = image.scrollWidth;
 					var newleft = ui.position.left;
 					if (newleft > iw) {
 						$(this).data('draggable').offset.click.left += iw;
@@ -139,33 +129,35 @@
 				},
 				containment : 'parent'
 			});
-			content.children('.image').load(updateDrag360);
-			return anirange;
+			return updateDrag360;
+		};
+
+		// Sets up the animation (called on load)
+		this.initAnimation = function(container, anirange) {
+			console.log(config.id + " initAnimation : " + anirange);
+			var content = container.find('.content');
+			content.css('left', anirange[0]);
+			content.animate({ left : anirange[1] }, 10 * Math.abs(anirange[1] - anirange[0]), 'linear');
 		};
 
 		// Calls the appropriate init method above depending on the mode
-		// parameter.
-		this.initMode = function(container, mode) {
+		// parameter. Can be called for the inline or popup view
+		this.initView = function(container, mode, animate) {
+			console.log(config.id + " initView");
+			var callback = function() { console.log("initView callback undefined"); };
 			if (mode == 'move') {
-				return self.initMove(container);
+				callback = self.initMove(container);
 			} else if (mode == 'drag') {
-				return self.initDrag(container);
+				callback = self.initDrag(container);
 			} else if (mode == 'drag360') {
-				return self.initDrag360(container);
+				callback = self.initDrag360(container);
 			}
-		};
-
-		// Sets up the animation
-		this.initAnimation = function(container, anirange) {
-			inline.find('.content').each(
-					function() {
-						var image = $(this).find('.image');
-						var minLeft = container.offset().left - self.getImageWidth() + container.width();
-						$(this).css('left', anirange[0]);
-						$(this).animate({
-							left : anirange[1]
-						}, 10 * Math.abs(anirange[1] - anirange[0]), 'linear');
-					});
+			return function() {
+				var anirange = callback();
+				if (animate) {
+					self.initAnimation(container, anirange)
+				}
+			};
 		};
 
 		// Initializes the ColorBox popup.
@@ -181,39 +173,46 @@
 				href : '#'+popupid,
 				onOpen : function() {
 					container.css('width', 'auto');
-					container.css('height', self.getImageHeight());
+					container.css('height', image.scrollHeight);
 					content.css('background-repeat', 'repeat');
-					content.css('height', self.getImageHeight());
+					content.css('height', image.scrollHeight);
 				},
 				onComplete : function() {
 					$('#'+popupid).each(function () {
 						var container = $(this).children('.container');
+						container.css('height', image.scrollHeight);
+						content.css('height', image.scrollHeight);
 						var innerHeight = $(this).parent().innerHeight();
 						if (innerHeight < $(this).height()) {
 							container.css('height', innerHeight);
 						}
-						self.initMode(container, mode);
+						callback = self.initView(container, mode);
+						callback();
 					});
 				}
 			});
 		};
 
+		// Initialisation of one instance, 
 		this.init = function(id, mode, popup_type, animate) {
 			inline.css('display', 'block'); // unhide
-			anirange = self.initMode(inline, mode);
-			if (animate == '1')
-				self.initAnimation(inline, anirange);
-			if (popup_type == 'colorbox') {
-				if ($().colorbox) {
-					self.initColorbox(elem.find('.popup'), id, mode);
+			var callback = self.initView(inline, mode, animate);
+			inline.find('.content').children('.image').one('load', function() {
+				callback();
+				if (popup_type == 'colorbox') {
+					if ($().colorbox) {
+						self.initColorbox(elem.find('.popup'), id, mode);
+					}
 				}
-			}
+			}).each(function() {
+				if (this.complete) $(this).load();
+			});
 		};
 	};
 
 	this.each(function() {
 		var photonav = new PhotoNav($(this));
-		photonav.init(config['id'], config['mode'], config['popup'], config['animate']);
+		photonav.init(config['id'], config['mode'], config['popup'], config['animate'] == '1');
 	});
 
 	return this;
