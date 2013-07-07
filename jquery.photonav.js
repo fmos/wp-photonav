@@ -31,11 +31,13 @@
 		var self = this;
 
 		var inline = elem.children('.container');
-		var image = inline.find('.image')[0]; // find to traverse dragconstraints
+		var image = inline.find('.image')[0];
 
 		this.initMove = function(container) {
+			console.log(config.id + " initMove");
 			var content = container.find('.content');
 			function updateMove() {
+				console.log(config.id + " updateMove");
 				var iw = image.scrollWidth, cw = container.width();
 				var ih = image.scrollHeight, ch = container.height();
 				content.width(iw);
@@ -56,12 +58,14 @@
 		};
 
 		this.initDrag = function(container) {
+			console.log(config.id + " initDrag");
 			var content = container.find('.content');
 			var wrapper = content.parent();
 			if (wrapper.attr('class') != 'dragconstraint') {
 				wrapper = content.wrap('<div class="dragconstraint" />').parent();
 			}
 			function updateDrag() {
+				console.log(config.id + " updateDrag");
 				var iw = image.scrollWidth, cw = container.width();
 				var ww = 2*iw - cw;
 				var ih = image.scrollHeight, ch = container.height();
@@ -74,6 +78,7 @@
 				wrapper.css('margin-top', (ch-wh)/2);
 				content.css('left', Math.max(0,(iw-cw)/2));
 				content.css('top', Math.max(0,(ih-ch)/2));
+				console.log("updateDrag : iw=" + iw + ", cw=" + cw);
 				return [iw-cw,0];
 			}
 			//updateDrag();
@@ -87,12 +92,14 @@
 		};
 
 		this.initDrag360 = function(container) {
+			console.log(config.id + " initDrag360");
 			var content = container.find('.content');
 			var wrapper = content.parent();
 			if (wrapper.attr('class') != 'dragconstraint') {
 				wrapper = content.wrap('<div class="dragconstraint" />').parent();
 			}
 			function updateDrag360() {
+				console.log(config.id + " updateDrag360");
 				var iw = image.scrollWidth, cw = container.width();
 				var ww = 2*iw + cw + 4;
 				var ih = image.scrollHeight, ch = container.height();
@@ -127,6 +134,7 @@
 
 		// Sets up the animation (called on load)
 		this.initAnimation = function(container, anirange) {
+			console.log(config.id + " initAnimation : " + anirange);
 			var content = container.find('.content');
 			content.css('left', anirange[0]);
 			content.animate({ left : anirange[1] }, 10 * Math.abs(anirange[1] - anirange[0]), 'linear');
@@ -135,7 +143,8 @@
 		// Calls the appropriate init method above depending on the mode
 		// parameter. Can be called for the inline or popup view
 		this.initView = function(container, mode, animate) {
-			var callback = function() { console.warn("initView callback undefined"); };
+			console.log(config.id + " initView");
+			var callback = function() { console.log("initView callback undefined"); };
 			if (mode == 'move') {
 				callback = self.initMove(container);
 			} else if (mode == 'drag') {
@@ -152,12 +161,12 @@
 		};
 
 		// Initializes the ColorBox popup.
-		this.initColorbox = function(popup, id, mode, animate) {
+		this.initColorbox = function(popup, id, mode) {
 			var popupid = id + '-popup';
-			popup.attr('id', popupid);
 			var container = popup.children('.container');
 			var content = container.find('.content');
-            inline.find('.content').colorbox({
+			popup.attr('id', popupid);
+			image.colorbox({
 				maxWidth : '100%',
 				maxHeight : '100%',
 				inline : true,
@@ -172,12 +181,12 @@
 					$('#'+popupid).each(function () {
 						var container = $(this).children('.container');
 						container.css('height', image.scrollHeight);
-						container.find('.content').css('height', image.scrollHeight);
+						content.css('height', image.scrollHeight);
 						var innerHeight = $(this).parent().innerHeight();
 						if (innerHeight < $(this).height()) {
 							container.css('height', innerHeight);
 						}
-						callback = self.initView(container, mode, animate);
+						callback = self.initView(container, mode);
 						callback();
 					});
 				}
@@ -192,7 +201,7 @@
 				callback();
 				if (popup_type == 'colorbox') {
 					if ($().colorbox) {
-						self.initColorbox(elem.find('.popup'), id, mode, animate);
+						self.initColorbox(elem.find('.popup'), id, mode);
 					}
 				}
 			}).each(function() {
