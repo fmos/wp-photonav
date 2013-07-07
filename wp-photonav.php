@@ -3,7 +3,7 @@
  Plugin Name: WP-PhotoNav
  Plugin URI: http://fmos.at/wp-photonav
  Description: Provides a scrolling field without scrollbars for huge pictures. Especially useful for panorama pictures.
- Version: 1.0.1
+ Version: 1.0.2
  Author: Fabian Stanke
  Author URI: http://fmos.at
  License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -21,8 +21,8 @@ if (!class_exists("PhotoNav")) {
 		// Registers the custom JavaScript and CSS
 		function register_resources() {
 			$baseDir = "/".PLUGINDIR."/wp-photonav";
-			wp_register_script('jquery-photonav', $baseDir."/jquery.photonav.js", array('jquery', 'jquery-ui-draggable'), '1.0.1');
-			wp_register_style('wp-photonav', $baseDir."/wp-photonav.css", array(), '1.0.1');
+			wp_register_script('jquery-photonav', $baseDir."/jquery.photonav.js", array('jquery', 'jquery-ui-draggable'), '1.0.2');
+			wp_register_style('wp-photonav', $baseDir."/wp-photonav.css", array(), '1.0.2');
 			wp_enqueue_script('jquery-photonav');
 			wp_enqueue_style('wp-photonav');
 		}
