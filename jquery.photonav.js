@@ -2,7 +2,7 @@
  *  PhotoNavigation for WordPress "WP-PhotoNav"
  *
  *  Version: 1.0.2
- *  Date: 13-07-07
+ *  Date: 13-07-03
  *  Author: Fabian Stanke
  *  Author URI: http://fmos.at
  *  License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
