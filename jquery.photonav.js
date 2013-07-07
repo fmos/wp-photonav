@@ -110,8 +110,8 @@
 				wrapper.css('margin-top', (ch-wh)/2);
 				content.width(iw + cw + 2);
 				content.height(ih);
-				content.left(Math.max(0,(iw+cw)/2));
-				content.top(Math.max(0,(ih-ch)/2));
+				content.css('left', Math.max(0,(iw+cw)/2));
+				content.css('top', Math.max(0,(ih-ch)/2));
 				return [iw, cw];
 			}
 			content.draggable({
