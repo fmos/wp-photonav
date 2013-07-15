@@ -58,8 +58,8 @@ if (!class_exists("PhotoNav")) {
 			$uploading_iframe_ID = (int) (0 == $post_ID ? $temp_ID : $post_ID);
 			$media_upload_iframe_src = "media-upload.php?post_id=$uploading_iframe_ID";
 			$photonav_upload_iframe_src = apply_filters("photonav_upload_iframe_src", "$media_upload_iframe_src&amp;type=photonav&amp;tab=type_url");
-			$image_title = "photonav.add_photonav";
-			$out = "<a href='{$photonav_upload_iframe_src}&amp;TB_iframe=true' id='add_photonav' class='thickbox' title='$image_title' onclick='return false;'><img src='".WP_PLUGIN_URL."/wp-photonav/media-button.gif' alt='$image_title' /></a>";
+			$image_title = "WP-PhotoNav";
+			$out = "<a href='{$photonav_upload_iframe_src}&amp;TB_iframe=true' id='add_photonav' class='button thickbox' title='$image_title' onclick='return false;'><img src='".WP_PLUGIN_URL."/wp-photonav/media-button.gif' alt='$image_title' /> Photonav</a>";
 			print($out);
 		}
 
