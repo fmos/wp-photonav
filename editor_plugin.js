@@ -61,7 +61,7 @@
 				author : 'Fabian Stanke',
 				authorurl : 'http://fmos.at',
 				infourl : 'http://fmos.at/wp-photonav',
-				version : "1.0.1"
+				version : "1.1"
 			};
 		}
 	});

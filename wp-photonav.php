@@ -3,7 +3,7 @@
  Plugin Name: WP-PhotoNav
  Plugin URI: http://fmos.at/wp-photonav
  Description: Provides a scrolling field without scrollbars for huge pictures. Especially useful for panorama pictures.
- Version: 1.0.2
+ Version: 1.1.0
  Author: Fabian Stanke
  Author URI: http://fmos.at
  License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -21,8 +21,8 @@ if (!class_exists("PhotoNav")) {
 		// Registers the custom JavaScript and CSS
 		function register_resources() {
 			$baseDir = "/".PLUGINDIR."/wp-photonav";
-			wp_register_script('jquery-photonav', $baseDir."/jquery.photonav.js", array('jquery', 'jquery-ui-draggable'), '1.0.2');
-			wp_register_style('wp-photonav', $baseDir."/wp-photonav.css", array(), '1.0.2');
+			wp_register_script('jquery-photonav', $baseDir."/jquery.photonav.js", array('jquery', 'jquery-ui-draggable'), '1.1.0');
+			wp_register_style('wp-photonav', $baseDir."/wp-photonav.css", array(), '1.1.0');
 			wp_enqueue_script('jquery-photonav');
 			wp_enqueue_style('wp-photonav');
 		}
@@ -58,8 +58,8 @@ if (!class_exists("PhotoNav")) {
 			$uploading_iframe_ID = (int) (0 == $post_ID ? $temp_ID : $post_ID);
 			$media_upload_iframe_src = "media-upload.php?post_id=$uploading_iframe_ID";
 			$photonav_upload_iframe_src = apply_filters("photonav_upload_iframe_src", "$media_upload_iframe_src&amp;type=photonav&amp;tab=type_url");
-			$image_title = "photonav.add_photonav";
-			$out = "<a href='{$photonav_upload_iframe_src}&amp;TB_iframe=true' id='add_photonav' class='thickbox' title='$image_title' onclick='return false;'><img src='".WP_PLUGIN_URL."/wp-photonav/media-button.gif' alt='$image_title' /></a>";
+			$image_title = "WP-PhotoNav";
+			$out = "<a href='{$photonav_upload_iframe_src}&amp;TB_iframe=true' id='add_photonav' class='button thickbox' title='$image_title' onclick='return false;'><img src='".WP_PLUGIN_URL."/wp-photonav/media-button.gif' alt='$image_title' /> Photonav</a>";
 			print($out);
 		}
 
@@ -291,6 +291,8 @@ if (!class_exists("PhotoNav")) {
                 'mode'=>'move',                 // 0.2
                 'popup'=>'none',                // 0.7
                 'animate' => '0',               // 0.7
+                'position' => 'center',			// 1.1
+                'label' => 'none'				// 1.1
 			);
 			$a = shortcode_atts($defaults, $atts);
 			$id = $this->getUniqueId();
@@ -299,6 +301,8 @@ if (!class_exists("PhotoNav")) {
 			}
 			if (is_numeric($a['container_width'])) {
 				$a['container_width'] = $a['container_width']."px";
+			} else if ($a['container_width'] == '') {
+				$a['container_width'] = 'auto';
 			}
 			if (is_null($a['container_height'])) {
 				$a['container_height'] = $a['height']; // default to height
@@ -308,9 +312,6 @@ if (!class_exists("PhotoNav")) {
 			if ($a['container_height'] == '') {
 				$a['container_height'] = 'auto';
 			}
-			if ($a['container_width'] == '') {
-				$a['container_width'] = 'auto';
-			}
 			$valid_modes = array('move', 'drag', 'drag360');
 			if (!in_array($a['mode'], $valid_modes)) {
 				$a['mode'] = 'move';
@@ -318,6 +319,15 @@ if (!class_exists("PhotoNav")) {
 			$valid_popups = array('none', 'colorbox');
 			if (!in_array($a['popup'], $valid_popups)) {
 				$a['popup'] = 'none';
+			}
+			$valid_positions = array('left', 'center', 'right');
+			if (!in_array($a['position'], $valid_positions)) {
+				if (!is_numeric($a['position'])) {
+					$a['position'] = $defaults['position'];
+				}
+			}
+			if ($a['label'] == '') {
+				$a['label'] = 'none';
 			}
 			$template_photonav = <<<PHOTONAVTEMPLATE
 <div class="photonav" id="%PHOTONAV_ID%">
@@ -335,7 +345,7 @@ if (!class_exists("PhotoNav")) {
             </div>
         </div>
     </div>
-    <script type="text/javascript">jQuery(document).ready(function(){jQuery("#%PHOTONAV_ID%").photoNav({id:"%PHOTONAV_ID%",mode:"%PHOTONAV_MODE%",popup:"%PHOTONAV_POPUP%",animate:"%PHOTONAV_ANIMATE%"});});</script>
+    <script type="text/javascript">jQuery(document).ready(function(){jQuery("#%PHOTONAV_ID%").photoNav({id:"%PHOTONAV_ID%",mode:"%PHOTONAV_MODE%",popup:"%PHOTONAV_POPUP%",animate:"%PHOTONAV_ANIMATE%",position:"%PHOTONAV_POSITION%",label:"%PHOTONAV_LABEL%"});});</script>
 </div>
 PHOTONAVTEMPLATE;
 			$template_photonav = str_replace("%PHOTONAV_ID%", $id, $template_photonav);
@@ -345,6 +355,8 @@ PHOTONAVTEMPLATE;
 			$template_photonav = str_replace("%PHOTONAV_CONTAINERHEIGHT%", $a['container_height'], $template_photonav);
 			$template_photonav = str_replace("%PHOTONAV_POPUP%", $a['popup'], $template_photonav);
 			$template_photonav = str_replace("%PHOTONAV_ANIMATE%", $a['animate'], $template_photonav);
+			$template_photonav = str_replace("%PHOTONAV_POSITION%", $a['position'], $template_photonav);
+			$template_photonav = str_replace("%PHOTONAV_LABEL%", $a['label'], $template_photonav);
 			return $template_photonav;
 		}
 
@@ -432,5 +444,4 @@ if (isset($photonav)) {
 	add_shortcode('photonav', array(&$photonav, 'parse_shortcode'));
 }
 
-include 'widget.php';
 ?>

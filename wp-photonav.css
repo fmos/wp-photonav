@@ -4,20 +4,24 @@
 }
 
 .photonav>.container {
+	position: relative;
 	overflow: hidden;
 	display: none;
 	margin: 0;
 }
 
-.photonav>.container>.dragconstraint {
-	position: relative;
-	margin: 0;
-	/* The following seems to be needed for mouse position calculation of ui.draggable in TwentTwelve */
-	overflow-y: scroll;
+.photonav>.container>.label {
+    background: url("moveme.png") no-repeat scroll right top transparent;
+    width: 119px;
+    height: 44px;
+    position: absolute;
+    right: 25px;
+    top: 25px;
+    z-index: 100;
 }
 
 .photonav>.container>.content,.photonav>.container>.dragconstraint>.content {
-	position: relative;
+	position: absolute;
 	background-position: top left;
 	background-repeat: repeat-x;
 	margin: 0;
@@ -25,6 +29,7 @@
 
 /* Override theme settings for img elements using 3 classes and 1 id for precedence */
 .photonav>.container>.content>#photonav-image,.photonav>.container>.dragconstraint>.content>#photonav-image {
+	box-shadow: none;
 	max-height: none;
 	max-width: none;
 	height: auto;

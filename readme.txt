@@ -3,7 +3,7 @@ Contributors: fmos, Norman Stanke
 Donate link: 
 Tags: panorama, image, photo, picture, photonav, jquery, scroll, 360, colorbox, autoscroll
 Requires at least: 2.8
-Tested up to: 3.5.2
+Tested up to: 3.6.1
 Stable tag: trunk
 
 Provides a scrolling field without scrollbars for pictures with huge horizontal dimensions. Especially useful for panorama pictures.
@@ -27,6 +27,12 @@ Further reading:
 4. Include PhotoNav in your post by entering `[photonav url='/wp-content/uploads/2010/08/panorama.jpg']`.
 
 == Changelog ==
+
+= 1.1.0 =
+* Feature: Initial position can be configured
+* Feature: A label can be displayed to differentiate from normal images
+* Feature: If animate is enabled for drag360 images, it scrolls infinitely (until first dragged)
+* Bugfix: Work around changes in jQuery draggable to make drag360 work again
 
 = 1.0.2 =
 * Bugfix: Updating scrolling information on image load to fix incorrect animations
