@@ -64,6 +64,15 @@
 			return anirange;
 		};
 
+		/* Drag mode DOM tree
+		   .photonav -> .container -> .dragconstraint -> .content -> .image
+
+		   .image is wrapped in .content for uniformity with the drag360 mode, 
+		   where the image is assigned as x-repeat background of .content
+
+		   .container is separate from .photonav, because the .photonav comprises
+		   two .containers: one for inline view and one for popup/lightbox view
+		 */
 		this.initDrag = function(container) {
 			var content = container.find('.content');
 			var wrapper = content.parent();
