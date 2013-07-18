@@ -432,5 +432,4 @@ if (isset($photonav)) {
 	add_shortcode('photonav', array(&$photonav, 'parse_shortcode'));
 }
 
-include 'widget.php';
 ?>
