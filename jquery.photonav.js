@@ -21,7 +21,8 @@
 			id : false,
 			mode : 'move',
 			popup : 'none',
-			animate : '0'
+			animate : '0',
+			position : 'center'
 	};
 
 	if (settings)
@@ -40,16 +41,29 @@
 			return image[0].scrollHeight;
 		};
 
-		this.initMove = function(container) {
+		// Determine initial position from image widthe and container width
+		this.calcLeft = function(position, iw, cw) {
+			if (position == 'center') {
+				return (cw - iw) / 2;
+			} else if (position == 'left') {
+				return (cw - iw);
+			} else if (position == 'right') {
+				return 0;
+			} else {
+				return position;
+			}
+		}
+
+		this.initMove = function(container, position) {
 			var content = container.find('.content');
 			function updateMove() {
 				var iw = self.getImageWidth(), ih = self.getImageHeight();
 				content.css('width', iw);
 				content.css('height', ih);
-				var overflow =  container.width() - iw;
-				content.css('left', Math.min(0, overflow/2));
-				content.css('top', Math.min(0, (container.height()-ih)/2));
-				return [0, overflow];
+				var cw = container.width(), ch = container.height();
+				content.css('left', self.calcLeft(position, iw, cw));
+				content.css('top', Math.min(0, (ch - ih)/2));
+				return [0, cw - iw];
 			};
 			var anirange = updateMove();
 			container.mousemove(function(event) {
@@ -98,7 +112,13 @@
 			var anirange = updateDrag();
 			content.draggable({
 				start : function() {
-					$(this).stop(); // Stop animation
+					$(this).stop(); // stop animation
+					if (wrapper.position().left + wrapper.width ==
+					    content.position().left + content.width) {
+						event.preventDefault();  //cancel the drag.
+						// reset the position of draggable to 1 less then the current
+						content.css('left', content.position().left - 1);
+					}
 				},
 				containment : 'parent'
 			});
@@ -131,7 +151,7 @@
 			var anirange = updateDrag360();
 			content.draggable({
 				start : function() {
-					$(this).stop();
+					$(this).stop(); // stop animation
 				},
 				drag : function(e, ui) {
 					var iw = self.getImageWidth();
@@ -150,13 +170,13 @@
 
 		// Calls the appropriate init method above depending on the mode
 		// parameter.
-		this.initMode = function(container, mode) {
+		this.initMode = function(container, mode, position) {
 			if (mode == 'move') {
-				return self.initMove(container);
+				return self.initMove(container, position);
 			} else if (mode == 'drag') {
-				return self.initDrag(container);
+				return self.initDrag(container, position);
 			} else if (mode == 'drag360') {
-				return self.initDrag360(container);
+				return self.initDrag360(container, position);
 			}
 		};
 
@@ -174,7 +194,7 @@
 		};
 
 		// Initializes the ColorBox popup.
-		this.initColorbox = function(popup, id, mode) {
+		this.initColorbox = function(popup, id, mode, position) {
 			var popupid = id + '-popup';
 			var container = popup.children('.container');
 			var content = container.find('.content');
@@ -197,20 +217,20 @@
 						if (innerHeight < $(this).height()) {
 							container.css('height', innerHeight);
 						}
-						self.initMode(container, mode);
+						self.initMode(container, mode, position);
 					});
 				}
 			});
 		};
 
-		this.init = function(id, mode, popup_type, animate) {
+		this.init = function(id, mode, popup_type, animate, position) {
 			inline.css('display', 'block'); // unhide
-			anirange = self.initMode(inline, mode);
+			anirange = self.initMode(inline, mode, position);
 			if (animate == '1')
 				self.initAnimation(inline, anirange);
 			if (popup_type == 'colorbox') {
 				if ($().colorbox) {
-					self.initColorbox(elem.find('.popup'), id, mode);
+					self.initColorbox(elem.find('.popup'), id, mode, position);
 				}
 			}
 		};
@@ -218,7 +238,7 @@
 
 	this.each(function() {
 		var photonav = new PhotoNav($(this));
-		photonav.init(config['id'], config['mode'], config['popup'], config['animate']);
+		photonav.init(config['id'], config['mode'], config['popup'], config['animate'], config['position']);
 	});
 
 	return this;
