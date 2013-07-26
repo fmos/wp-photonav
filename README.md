@@ -70,7 +70,39 @@ Here is a list of the employed parameters and their meaning:
     functionality of the panorama compared to a simple, still image. Please 
     note that the animation (like everything else) is accomplished using 
     JavaScript and might not be 100% fluid on all systems and browsers.
+*   `position` -- Defines the initial horizontal postion. The parameter may 
+    be a pixel value for horizontal displacement or take any one of the
+    following relative values, for which the corresponding pixel value is 
+    automatically calculated: center, left or right.
 
+Developer remarks
+-----------------
+
+### DOM tree
+
+The structure of the `div` elements used for the PhotoNav content is:
+
+    .photonav -> .container -> .content -> .image
+
+`.image` is wrapped in `.content` for uniformity with the drag360 mode, where
+the image is assigned as repeated background of `.content`.
+
+`.container` is separate from `.photonav`, because the `.photonav` comprises
+two `.containers`: one for inline view and one for popup/lightbox view (which
+is hidden)
+
+### Interaction with Subversion
+
+The master branch mirrors the SVN trunk used for publication. Development 
+happens in the progress branch and is rebased to master. Synchronisation with
+SVN is achieved by `git-svn`.
+
+An SVN commit is done using the following workflow:
+
+    git checkout master
+    git svn rebase
+    git rebase -i master progress
+    git svn dcommit
 
 [issues]: https://github.com/fmos/wp-photonav/issues
 [plugin]: http://wordpress.org/extend/plugins/wp-photonav/
