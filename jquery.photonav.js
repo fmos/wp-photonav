@@ -22,7 +22,8 @@
 		mode : 'move',
 		popup : 'none',
 		animate : '0',
-		position : 'center'
+		position : 'center',
+		label : 'none'
 	};
 
 	function PhotoNav(elem) {
@@ -207,6 +208,12 @@
 				if ($().colorbox) {
 					self.initColorbox(elem.find('.popup'));
 				}
+			}
+			if (config.label != 'none') {
+				label = document.createElement('div');
+				label.className = 'label';
+				inline.append(label);
+				elem.hover(function() { $(label).fadeTo('fast', 0.0); }, function() { $(label).fadeTo('fast', 1.0); });
 			}
 		};
 	};
