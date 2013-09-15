@@ -40,24 +40,16 @@
 			return image[0].scrollHeight;
 		};
 
-		this.updateContent = function(content, width) {
-			// Copy the image size to all content DIVs
-			if (width == undefined) {
-				width = self.getImageWidth();
-			}
-			content.css('height', self.getImageHeight());
-			content.css('width', width);
-		};
-
 		this.initMove = function(container) {
 			var content = container.find('.content');
 			function updateMove() {
-				var iw = self.getImageWidth(), cw = container.width();
-				var ih = self.getImageHeight(), ch = container.height();
-				self.updateContent(content);
-				content.css('left', Math.min(0,(cw-iw)/2));
-				content.css('top', Math.min(0,(ch-ih)/2));
-				return [0, cw-iw];
+				var iw = self.getImageWidth(), ih = self.getImageHeight();
+				content.css('width', iw);
+				content.css('height', ih);
+				var overflow =  container.width() - iw;
+				content.css('left', Math.min(0, overflow/2));
+				content.css('top', Math.min(0, (container.height()-ih)/2));
+				return [0, overflow];
 			};
 			var anirange = updateMove();
 			container.mousemove(function(event) {
@@ -79,17 +71,18 @@
 				wrapper = content.wrap('<div class="dragconstraint" />').parent();
 			}
 			function updateDrag() {
-				self.updateContent(content);
-				var iw = self.getImageWidth(), cw = container.width();
+				var iw = self.getImageWidth(), ih = self.getImageHeight();
+				content.css('width', iw);
+				content.css('height', ih);
+				var cw = container.width(), ch = container.height();
 				var ww = 2*iw - cw;
-				var ih = self.getImageHeight(), ch = container.height();
 				var wh = 2*ih - ch;
 				wrapper.width(ww);
 				wrapper.css('margin-left', (cw-ww)/2);
 				wrapper.height(wh);
 				wrapper.css('margin-top', (ch-wh)/2);
-				content.css('left', Math.max(0,(iw-cw)/2));
-				content.css('top', Math.max(0,(ih-ch)/2));
+				content.css('left', Math.max(0, (iw-cw)/2));
+				content.css('top', Math.max(0, (ih-ch)/2));
 				return [iw-cw, 0];
 			}
 			var anirange = updateDrag();
@@ -110,15 +103,16 @@
 				wrapper = content.wrap('<div class="dragconstraint" />').parent();
 			}
 			function updateDrag360() {
-				var iw = self.getImageWidth(), cw = container.width();
+				var iw = self.getImageWidth(), ih = self.getImageHeight();
+				var cw = container.width(), ch = container.height();
+				content.css('width', iw + cw + 2);
+				content.css('height', ih);
 				var ww = 2*iw + cw + 4;
-				var ih = self.getImageHeight(), ch = container.height();
 				var wh = 2*ih - ch;
 				wrapper.width(ww);
 				wrapper.css('margin-left', (cw-ww)/2);
 				wrapper.height(wh);
 				wrapper.css('margin-top', (ch-wh)/2);
-				self.updateContent(content, iw + cw + 2);
 				content.css('left', Math.max(0,(iw+cw)/2));
 				content.css('top', Math.max(0,(ih-ch)/2));
 				return [iw, cw];
