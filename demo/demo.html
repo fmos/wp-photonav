@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>WP-PhotoNav Demo</title>
+    <link rel="stylesheet" href="../wp-photonav.css">
+    <script src="jquery-1.9.1.js"></script>
+    <script src="jquery-ui-1.10.3.custom.js"></script>
+    <script src="../jquery.photonav.js"></script>
+</head>
+<body>
+    <h1>WP-PhotoNav Demo</h1>
+    <div class="photonav" id="84ddd9f54896482d">
+        <div class="container" style="width: auto; height: auto;">
+            <div class="content" style="background-image: url(panorama.jpg);">
+                <img id="photonav-image" class="image colorbox-off" src="panorama.jpg">
+            </div>
+        </div>
+        <div style="display: none;">
+            <div class="photonav popup">
+                <div class="container" style="display: block; overflow: hidden;">
+                    <div class="content" style="background-image: url(panorama.jpg);">
+                        <img id="photonav-image" class="image colorbox-off" src="panorama.jpg">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">jQuery(document).ready(function(){jQuery("#84ddd9f54896482d").photoNav({id:"84ddd9f54896482d",mode:"drag",popup:"none",animate:"",position:"center"});});</script>
+    </div>
+    <p>The End</p>
+</body>
+</html>
