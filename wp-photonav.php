@@ -291,6 +291,7 @@ if (!class_exists("PhotoNav")) {
                 'mode'=>'move',                 // 0.2
                 'popup'=>'none',                // 0.7
                 'animate' => '0',               // 0.7
+                'position' => 'center'			// 1.1
 			);
 			$a = shortcode_atts($defaults, $atts);
 			$id = $this->getUniqueId();
@@ -319,6 +320,12 @@ if (!class_exists("PhotoNav")) {
 			if (!in_array($a['popup'], $valid_popups)) {
 				$a['popup'] = 'none';
 			}
+			$valid_positions = array('left', 'center', 'right');
+			if (!in_array($a['position'], $valid_positions)) {
+				if (!is_numeric($a['position'])) {
+					$a['position'] = $defaults['position'];
+				}
+			}
 			$template_photonav = <<<PHOTONAVTEMPLATE
 <div class="photonav" id="%PHOTONAV_ID%">
     <div class="container" style="width: %PHOTONAV_CONTAINERWIDTH%; height: %PHOTONAV_CONTAINERHEIGHT%;">
@@ -335,7 +342,7 @@ if (!class_exists("PhotoNav")) {
             </div>
         </div>
     </div>
-    <script type="text/javascript">jQuery(document).ready(function(){jQuery("#%PHOTONAV_ID%").photoNav({id:"%PHOTONAV_ID%",mode:"%PHOTONAV_MODE%",popup:"%PHOTONAV_POPUP%",animate:"%PHOTONAV_ANIMATE%"});});</script>
+    <script type="text/javascript">jQuery(document).ready(function(){jQuery("#%PHOTONAV_ID%").photoNav({id:"%PHOTONAV_ID%",mode:"%PHOTONAV_MODE%",popup:"%PHOTONAV_POPUP%",animate:"%PHOTONAV_ANIMATE%",position:"%PHOTONAV_POSITION%"});});</script>
 </div>
 PHOTONAVTEMPLATE;
 			$template_photonav = str_replace("%PHOTONAV_ID%", $id, $template_photonav);
@@ -345,6 +352,7 @@ PHOTONAVTEMPLATE;
 			$template_photonav = str_replace("%PHOTONAV_CONTAINERHEIGHT%", $a['container_height'], $template_photonav);
 			$template_photonav = str_replace("%PHOTONAV_POPUP%", $a['popup'], $template_photonav);
 			$template_photonav = str_replace("%PHOTONAV_ANIMATE%", $a['animate'], $template_photonav);
+			$template_photonav = str_replace("%PHOTONAV_POSITION%", $a['position'], $template_photonav);
 			return $template_photonav;
 		}
 
