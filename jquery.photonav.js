@@ -17,12 +17,12 @@
  */
 
 (function($) {$.fn.photoNav = function(settings) {
-	var config = {
-			id : false,
-			mode : 'move',
-			popup : 'none',
-			animate : '0',
-			position : 'center'
+	var defaults = {
+		id : false,
+		mode : 'move',
+		popup : 'none',
+		animate : '0',
+		position : 'center'
 	};
 
 	function PhotoNav(elem) {
@@ -165,16 +165,15 @@
 		};
 
 		// Initializes the ColorBox popup.
-		this.initColorbox = function(popup, id, mode, position) {
-			var popupid = id + '-popup';
+		this.initColorbox = function(popup) {
 			var container = popup.children('.container');
-			var content = container.find('.content');
-			popup.attr('id', popupid);
+			var content = container.children('.content');
 			image.colorbox({
 				maxWidth : '100%',
 				maxHeight : '100%',
+				width : self.getImageWidth(),
 				inline : true,
-				href : '#'+popupid,
+				href : popup,
 				onOpen : function() {
 					container.css('width', 'auto');
 					container.css('height', self.getImageHeight());
@@ -182,13 +181,13 @@
 					content.css('height', self.getImageHeight());
 				},
 				onComplete : function() {
-					$('#'+popupid).each(function () {
+					popup.each(function () {
 						var container = $(this).children('.container');
 						var innerHeight = $(this).parent().innerHeight();
 						if (innerHeight < $(this).height()) {
 							container.css('height', innerHeight);
 						}
-						self.initMode(container, mode, position);
+						self.initMode(container);
 					});
 				}
 			});
@@ -199,8 +198,7 @@
 			config = c;
 			inline.css('display', 'block'); // unhide (skip load optimization)
 			self.initMode(inline);
-
-			if (config.popup_type == 'colorbox') {
+			if (config.popup == 'colorbox') {
 				if ($().colorbox) {
 					self.initColorbox(elem.find('.popup'));
 				}
@@ -210,8 +208,8 @@
 
 	this.each(function() {
 		var photonav = new PhotoNav($(this));
-		var c = settings ? $.extend({}, config, settings) : $.extend({}, config)
-		photonav.init(c);
+		var config = settings ? $.extend({}, defaults, settings) : $.extend({}, defaults)
+		photonav.init(config);
 	});
 
 	return this;
