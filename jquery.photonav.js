@@ -52,6 +52,18 @@
 			}
 		}
 
+		/* PhotoNav DOM tree notes
+
+		   .photonav -> .container -> .content -> .image
+
+		   .image is wrapped in .content for uniformity with the drag360 mode, 
+		   where the image is assigned as x-repeat background of .content
+
+		   .container is separate from .photonav, because the .photonav comprises
+		   two .containers: one for inline view and one for popup/lightbox view
+
+		 */
+
 		this.initMove = function(container) {
 			var content = container.find('.content');
 			function updateMove() {
@@ -79,15 +91,6 @@
 			return anirange;
 		};
 
-		/* Drag mode DOM tree
-		   .photonav -> .container -> .dragconstraint -> .content -> .image
-
-		   .image is wrapped in .content for uniformity with the drag360 mode, 
-		   where the image is assigned as x-repeat background of .content
-
-		   .container is separate from .photonav, because the .photonav comprises
-		   two .containers: one for inline view and one for popup/lightbox view
-		 */
 		this.initDrag = function(container) {
 			var content = container.find('.content');
 			content.draggable({
@@ -98,15 +101,16 @@
 			});
 			function updateDrag() {
 				var iw = self.getImageWidth(), ih = self.getImageHeight();
-				var cw = container.width(), ch = container.height();
-				var co = container.offset();
+				var cw = container.width(); // the div element horizontally fills the parent
+				var ch = container.height(); // determine whether a manually assigned height is used
 				if (ch == 0) {
-					ch = ih;
+					ch = ih; // ... otherwise use the image height
 					container.height(ch);
 				}
 				content.css('left', self.parsePos(config.position, iw, cw));
 				content.css('top', Math.max(0, (ch-ih)/2));
-				var containment = [cw + co.left - iw, ch + co.top - ih, co.left, co.top];
+				var co = container.offset();
+				var containment = [co.left + cw - iw, co.top + ch - ih, co.left, co.top];
 				content.draggable("option", "containment", containment);
 				return [iw-cw, 0];
 			}
@@ -117,27 +121,6 @@
 
 		this.initDrag360 = function(container) {
 			var content = container.find('.content');
-			var wrapper = content.parent();
-			if (wrapper.attr('class') != 'dragconstraint') {
-				wrapper = content.wrap('<div class="dragconstraint" />').parent();
-			}
-			function updateDrag360() {
-				var iw = self.getImageWidth(), ih = self.getImageHeight();
-				content.css('height', ih);
-				var cw = container.width(), ch = container.height();
-				if (ch == 0) { ch = ih; } // Fix zero height in Safari
-				content.css('width', iw + cw + 2);
-				var ww = 2*iw + cw + 4;
-				var wh = 2*ih - ch;
-				wrapper.width(ww);
-				wrapper.css('margin-left', (cw-ww)/2);
-				wrapper.height(wh);
-				wrapper.css('margin-top', (ch-wh)/2);
-				content.css('left', Math.max(0,(iw+cw)/2));
-				content.css('top', Math.max(0,(ih-ch)/2));
-				return [iw, cw];
-			}
-			var anirange = updateDrag360();
 			content.draggable({
 				start : function() {
 					$(this).stop(); // stop animation
@@ -145,20 +128,38 @@
 				drag : function(e, ui) {
 					var iw = self.getImageWidth();
 					var newleft = ui.position.left;
-					if (newleft > iw) {
+					if (newleft > - 2) {
 						$(this).data('draggable').offset.click.left += iw;
-					} else if (newleft < 1) {
+						console.debug("drag360 : flip positive");
+					} else if (newleft < - iw - 1) {
 						$(this).data('draggable').offset.click.left -= iw;
+						console.debug("drag360 : flip negative");
 					}
 				},
-				containment : 'parent'
+				scroll : false
 			});
+			function updateDrag360() {
+				var iw = self.getImageWidth(), ih = self.getImageHeight();
+				var cw = container.width(); // the div element horizontally fills the parent
+				var ch = container.height(); // determine whether a manually assigned height is used
+				if (ch == 0) {
+					ch = ih; // ... otherwise use the image height
+					container.height(ch);
+				}
+				content.css('width', iw + cw + 2); // for 360 mode, the dragable content is enlarged
+				content.css('left', self.parsePos(config.position, iw, cw));
+				content.css('top', Math.max(0, (ch-ih)/2));
+				var co = container.offset();
+				var containment = [co.left - iw - 2, co.top + ch - ih, co.left, co.top];
+				content.draggable("option", "containment", containment);
+				return [iw, cw];
+			}
 			content.children('.image').load(updateDrag360);
+			var anirange = updateDrag360();
 			return anirange;
 		};
 
-		// Calls the appropriate init method above depending on the mode
-		// parameter.
+		// Calls the appropriate init method above depending on the mode parameter.
 		this.initMode = function(container) {
 			switch (config.mode) {
 				case 'move':
