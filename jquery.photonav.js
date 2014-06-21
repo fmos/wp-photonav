@@ -75,6 +75,7 @@
 				content.css('width', iw);
 				content.css('height', ih);
 				var cw = container.width(), ch = container.height();
+				if (ch == 0) { ch = ih; } // Fix zero height in Safari
 				var ww = 2*iw - cw;
 				var wh = 2*ih - ch;
 				wrapper.width(ww);
@@ -104,9 +105,10 @@
 			}
 			function updateDrag360() {
 				var iw = self.getImageWidth(), ih = self.getImageHeight();
-				var cw = container.width(), ch = container.height();
-				content.css('width', iw + cw + 2);
 				content.css('height', ih);
+				var cw = container.width(), ch = container.height();
+				if (ch == 0) { ch = ih; } // Fix zero height in Safari
+				content.css('width', iw + cw + 2);
 				var ww = 2*iw + cw + 4;
 				var wh = 2*ih - ch;
 				wrapper.width(ww);
