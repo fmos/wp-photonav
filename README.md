@@ -43,7 +43,7 @@ specify the URL of the image:
 For more sophistication, WP-PhotoNav accepts a number of parameters, most of 
 which are demonstrated in the following example:
 
-    [photonav url='/files/2009/05/panorama02_resized.jpg' container_height=300 mode=drag360 popup=colorbox animate=1 position=right label=1]
+    [photonav url='/files/2009/05/panorama02_resized.jpg' container_height=300 mode=drag360 popup=colorbox animate=1]
 
 Here is a list of the employed parameters and their meaning:
 
@@ -74,9 +74,6 @@ Here is a list of the employed parameters and their meaning:
     be a pixel value for horizontal displacement or take any one of the
     following relative values, for which the corresponding pixel value is 
     automatically calculated: center, left or right.
-*   `label` -– If this option is enabled, an overlay will be displayed in the 
-    top right corner of the image to inform the user of the additional 
-    capabilities.
 
 Developer remarks
 -----------------
