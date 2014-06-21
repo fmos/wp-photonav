@@ -4,7 +4,7 @@ Donate link:
 Tags: panorama, image, photo, picture, photonav, jquery, scroll, 360, colorbox, autoscroll
 Requires at least: 2.8
 Tested up to: 3.6.1
-Stable tag: trunk
+Stable tag: 1.1
 
 Provides a scrolling field without scrollbars for pictures with huge horizontal dimensions. Especially useful for panorama pictures.
 
