@@ -39,18 +39,6 @@
 			return image[0].scrollHeight;
 		};
 
-		/* PhotoNav DOM tree notes
-
-		   .photonav -> .container -> .content -> .image
-
-		   .image is wrapped in .content for uniformity with the drag360 mode, 
-		   where the image is assigned as x-repeat background of .content
-
-		   .container is separate from .photonav, because the .photonav comprises
-		   two .containers: one for inline view and one for popup/lightbox view
-
-		 */
-
 		this.initMove = function(container) {
 			var content = container.find('.content');
 			container.mousemove(function(event) {
@@ -107,14 +95,22 @@
 
 		// Parse the position parameters
 		this.parsePos = function(position, dimage, dcontainer) {
-			if (position == 'center') {
-				result = (dcontainer - dimage) / 2;
-			} else if (position == 'left') {
-				result = (dcontainer - dimage);
-			} else if (position == 'right') {
-				result = 0;
-			} else {
-				result = parseFloat(position);
+			var result;
+			switch (position) {
+				case 'center':
+					result = (dcontainer - dimage) / 2;
+					break;
+				case 'left':
+				case 'top':
+					result = (dcontainer - dimage);
+					break;
+				case 'right':
+				case 'bottom':
+					result = 0;
+					break;
+				default:
+					result = parseFloat(position);
+					break;
 			}
 			return result;
 		}
@@ -132,6 +128,15 @@
 			content.css('left', leftStart);
 			content.css('top', Math.min(0, (ch - ih)/2));
 			if (callback) callback(container, content, iw, ih, cw, ch);
+			$(window).resize(function() {
+				if ((container.width() != cw) || (container.height() != ch)) {
+					cw = container.width(); ch = container.height();
+					var pos = content.position();
+					if (pos.left < cw - iw) content.css('left', cw - iw);
+					if (pos.top < ch - ih) content.css('top', ch - ih);
+					if (callback) callback(container, content, iw, ih, cw, ch);
+				}
+			});
 			if (config.animate == '1') {
 				content.each(
 					function() {
