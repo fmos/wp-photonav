@@ -3,3 +3,6 @@
 .buildpath
 .settings
 .DS_Store
+.gitignore
+php-mo.php
+php-mo-convert.php
