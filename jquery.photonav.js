@@ -16,7 +16,22 @@
  * 	Date: 09-04-09 
  */
 
-(function($) {$.fn.photoNav = function(settings) {
+(function($) {
+
+$.ui.plugin.add("draggable", "infinite", {
+	drag: function(event, ui) {
+		if (ui.position.left > - 2) {
+			// right-dragging wrap around
+			ui.position.left -= ui.helper.wrapwidth;
+		} else if (ui.position.left < - ui.helper.wrapwidth - 1) {
+			// left-dragging wrap around
+			ui.position.left += ui.helper.wrapwidth;
+		}
+		return true;
+	}
+});
+
+$.fn.photoNav = function(settings) {
 	var defaults = {
 		id : false,
 		mode : 'move',
@@ -71,25 +86,18 @@
 		this.initDrag360 = function(container) {
 			var content = container.find('.content');
 			content.draggable({
-				start : function() {
+				start : function(e, ui) {
 					$(this).stop(); // stop animation
+					ui.helper.wrapwidth = self.getImageWidth();
 				},
-				drag : function(e, ui) {
-					var iw = self.getImageWidth();
-					var newleft = ui.position.left;
-					if (newleft > - 2) {
-						$(this).data('draggable').offset.click.left += iw;
-					} else if (newleft < - iw - 1) {
-						$(this).data('draggable').offset.click.left -= iw;
-					}
-				},
-				scroll : false
+				scroll : false,
+				infinite : true // activate the plugin defined above
 			});
 			// Return a callback that gets called with the image dimensions
 			return function(container, content, iw, ih, cw, ch) {
 				content.css('width', iw + cw + 2); // for 360 mode, the dragable content is enlarged
 				var co = container.offset();
-				var containment = [co.left - iw - 2, co.top + ch - ih, co.left, co.top];
+				var containment = [, co.top + ch - ih, , co.top]; // no horizontal containment
 				content.draggable("option", "containment", containment);
 			}
 		};
@@ -139,13 +147,24 @@
 				}
 			});
 			if (config.animate == '1') {
-				content.each(
-					function() {
-						var leftEnd = self.parsePos('right', iw, cw);
-						$(this).animate({
-							left : leftEnd
-						}, 10 * Math.abs(leftEnd - leftStart), 'linear');
+				var leftEnd = self.parsePos('right', iw, cw);
+				animate_loop = function(c) {
+					c.css('left', c.position().left - iw);
+					c.animate({
+						left : leftEnd
+					}, 10 * Math.abs(iw), 'linear', function() {
+						setTimeout(function() { 
+							animate_loop(c);
+						}, 1);
 					});
+				};
+				content.each(function() { 
+					$(this).animate({
+						left : leftEnd
+					}, 10 * Math.abs(leftEnd - leftStart), 'linear', function() {
+						if (config.mode == 'drag360') animate_loop($(this)); 
+					});
+				});
 			}			
 		};
 
@@ -225,4 +244,6 @@
 	});
 
 	return this;
-};}(jQuery));
+};
+
+}(jQuery));
