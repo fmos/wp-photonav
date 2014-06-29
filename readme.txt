@@ -33,6 +33,7 @@ Further reading:
 * Feature: A label can be displayed to differentiate from normal images
 * Feature: If animate is enabled for drag360 images, it scrolls infinitely (until first dragged)
 * Bugfix: Work around changes in jQuery draggable to make drag360 work again
+* Spanish translation provided by Andrew Kurtis from [WebHostingHub](http://www.webhostinghub.com)
 
 = 1.0.2 =
 * Bugfix: Updating scrolling information on image load to fix incorrect animations
