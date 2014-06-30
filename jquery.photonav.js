@@ -13,7 +13,7 @@
  * 	PhotoNavigation the jQuery version
  * 	A Javascript Module by Gaya Kessler
  * 	Version 1.0
- * 	Date: 09-04-09 
+ * 	Date: 09-04-09
  */
 
 (function($) {
@@ -38,12 +38,14 @@ $.fn.photoNav = function(settings) {
 		popup : 'none',
 		animate : '0',
 		position : 'center',
-		label : 'none'
+		label : 'none',
+		fullview : '0',
 	};
 
 	function PhotoNav(elem) {
 		var self = this;
 		var config;
+		var is_fullview = false;
 
 		var inline = elem.children('.container');
 		var image = inline.find('.image');
@@ -73,6 +75,9 @@ $.fn.photoNav = function(settings) {
 				start : function(event, ui) {
 					$(this).stop(); // stop animation
 				},
+				drag : function(event, ui) {
+					return (!is_fullview);
+				},
 				scroll : false
 			});
 			// Return a callback that gets called with the image dimensions
@@ -86,9 +91,12 @@ $.fn.photoNav = function(settings) {
 		this.initDrag360 = function(container) {
 			var content = container.find('.content');
 			content.draggable({
-				start : function(e, ui) {
+				start : function(event, ui) {
 					$(this).stop(); // stop animation
 					ui.helper.wrapwidth = self.getImageWidth();
+				},
+				drag : function(eevent, ui) {
+					return (!is_fullview);
 				},
 				scroll : false,
 				infinite : true // activate the plugin defined above
@@ -139,7 +147,8 @@ $.fn.photoNav = function(settings) {
 			if (callback) callback(container, content, iw, ih, cw, ch);
 			$(window).resize(function() {
 				if ((container.width() != cw) || (container.height() != ch)) {
-					cw = container.width(); ch = container.height();
+					cw = container.width();
+					if (!is_fullview) ch = container.height();
 					var pos = content.position();
 					if (pos.left < cw - iw) content.css('left', cw - iw);
 					if (pos.top < ch - ih) content.css('top', ch - ih);
@@ -153,19 +162,36 @@ $.fn.photoNav = function(settings) {
 					c.animate({
 						left : leftEnd
 					}, 10 * Math.abs(iw), 'linear', function() {
-						setTimeout(function() { 
+						setTimeout(function() {
 							animate_loop(c);
 						}, 1);
 					});
 				};
-				content.each(function() { 
+				content.each(function() {
 					$(this).animate({
 						left : leftEnd
 					}, 10 * Math.abs(leftEnd - leftStart), 'linear', function() {
-						if (config.mode == 'drag360') animate_loop($(this)); 
+						if (config.mode == 'drag360') animate_loop($(this));
 					});
 				});
-			}			
+			}
+			if (config.fullview == '1') {
+				container.mouseenter(function(event) {
+					image.css('width', 'auto');
+					content.css('position', 'absolute');
+					container.height(ch);
+					is_fullview = false;
+				});
+				container.mouseleave(function(event) {
+					content.css('position', 'relative');
+					content.css('left', 0);
+					content.css('top', 0);
+					image.css('width', '100%');
+					container.height('auto');
+					is_fullview = true;
+				});
+				container.trigger("mouseleave");
+			}
 		};
 
 		// Calls the appropriate init method above depending on the mode parameter.

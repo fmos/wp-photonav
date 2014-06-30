@@ -29,6 +29,7 @@
 
 /* Override theme settings for img elements using 3 classes and 1 id for precedence */
 .photonav>.container>.content>#photonav-image,.photonav>.container>.dragconstraint>.content>#photonav-image {
+	display: block;
 	box-shadow: none;
 	max-height: none;
 	max-width: none;
