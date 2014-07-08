@@ -21,7 +21,7 @@ if (!class_exists("PhotoNav")) {
 		// Registers the custom JavaScript and CSS
 		function register_resources() {
 			$baseDir = "/".PLUGINDIR."/wp-photonav";
-			wp_register_script('jquery-photonav', $baseDir."/jquery.photonav.js", array('jquery', 'jquery-ui-draggable'), '1.1.0');
+			wp_register_script('jquery-photonav', $baseDir."/jquery.photonav.js", array('jquery', 'jquery-ui-draggable', 'jquery-touch-punch'), '1.1.0');
 			wp_register_style('wp-photonav', $baseDir."/wp-photonav.css", array(), '1.1.0');
 			wp_enqueue_script('jquery-photonav');
 			wp_enqueue_style('wp-photonav');
