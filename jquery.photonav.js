@@ -1,8 +1,8 @@
 /*
  *  PhotoNavigation for WordPress "WP-PhotoNav"
  *
- *  Version: 1.1.0
- *  Date: 13-09-15
+ *  Version: 1.2.0
+ *  Date: 14-07-12
  *  Author: Fabian Stanke
  *  Author URI: http://fmos.at
  *  License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -16,270 +16,339 @@
  * 	Date: 09-04-09
  */
 
-(function($) {
+(function( $ ) {
 
-$.ui.plugin.add("draggable", "infinite", {
-	drag: function(event, ui) {
-		if (ui.position.left > - 2) {
-			// right-dragging wrap around
-			ui.position.left -= ui.helper.wrapwidth;
-		} else if (ui.position.left < - ui.helper.wrapwidth - 1) {
-			// left-dragging wrap around
-			ui.position.left += ui.helper.wrapwidth;
+	// Extend the draggable plugin for 360 degree "infinite" dragging
+	$.ui.plugin.add( 'draggable', 'infinite', {
+		drag: function( event, ui ) {
+			if ( ui.position.left > -2 ) {
+				// right-dragging wrap around
+				ui.position.left -= ui.helper.wrapwidth;
+			} else if ( ui.position.left < -ui.helper.wrapwidth - 1 ) {
+				// left-dragging wrap around
+				ui.position.left += ui.helper.wrapwidth;
+			}
+			return true;
 		}
-		return true;
-	}
-});
-
-$.fn.photoNav = function(settings) {
-	var defaults = {
-		id : false,
-		mode : 'move',
-		popup : 'none',
-		animate : '0',
-		position : 'center',
-		label : 'none',
-	};
-
-	function PhotoNav(elem) {
-		var self = this;
-		var config;
-		var is_fullview = false;
-
-		var inline = elem.children('.container');
-		var image = inline.find('.image');
-
-		this.getImageWidth = function() {
-			return image[0].scrollWidth;
-		};
-		this.getImageHeight = function() {
-			return image[0].scrollHeight;
-		};
-
-		this.initMove = function(container) {
-			var content = container.find('.content');
-			container.mousemove(function(event) {
-				var offset = $(this).offset();
-				var curX = (event.pageX - offset.left) * (1 - self.getImageWidth() / this.offsetWidth);
-				var curY = (event.pageY - offset.top) * (1 - self.getImageHeight() / this.offsetHeight);
-				content.stop(); // stop animation
-				content.css('left', curX > 0 ? 0 : curX);
-				content.css('top', curY > 0 ? 0 : curY);
-			});
-		};
-
-		this.initDrag = function(container) {
-			var content = container.find('.content');
-			content.draggable({
-				start : function(event, ui) {
-					$(this).stop(); // stop animation
-				},
-				drag : function(event, ui) {
-					return (!is_fullview);
-				},
-				scroll : false
-			});
-			// Return a callback that gets called with the image dimensions
-			return function(container, content, iw, ih, cw, ch) {
-				var co = container.offset();
-				var containment = [co.left + cw - iw, co.top + ch - ih, co.left, co.top];
-				content.draggable("option", "containment", containment);
-			}
-		};
-
-		this.initDrag360 = function(container) {
-			var content = container.find('.content');
-			content.draggable({
-				start : function(event, ui) {
-					$(this).stop(); // stop animation
-					ui.helper.wrapwidth = self.getImageWidth();
-				},
-				drag : function(eevent, ui) {
-					return (!is_fullview);
-				},
-				scroll : false,
-				infinite : true // activate the plugin defined above
-			});
-			// Return a callback that gets called with the image dimensions
-			return function(container, content, iw, ih, cw, ch) {
-				content.css('width', iw + cw + 2); // for 360 mode, the dragable content is enlarged
-				var co = container.offset();
-				var containment = [, co.top + ch - ih, , co.top]; // no horizontal containment
-				content.draggable("option", "containment", containment);
-			}
-		};
-
-		// Parse the position parameters
-		this.parsePos = function(position, dimage, dcontainer) {
-			var result;
-			switch (position) {
-				case 'center':
-					result = (dcontainer - dimage) / 2;
-					break;
-				case 'left':
-				case 'top':
-					result = (dcontainer - dimage);
-					break;
-				case 'right':
-				case 'bottom':
-					result = 0;
-					break;
-				default:
-					result = parseFloat(position);
-					break;
-			}
-			return result;
-		}
-
-		this.imageLoaded = function(container, callback) {
-			var content = container.find('.content');
-			var iw = self.getImageWidth(), ih = self.getImageHeight();
-			var cw = container.width(); // the div element horizontally fills the parent
-			var ch = container.height(); // determine whether a manually assigned height is used
-			if (ch == 0) {
-				ch = ih; // ... otherwise use the image height
-				container.height(ch + 'px');
-			}
-			var leftStart = self.parsePos(config.position, iw, cw);
-			content.css('left', leftStart);
-			content.css('top', Math.min(0, (ch - ih)/2));
-			if (callback) callback(container, content, iw, ih, cw, ch);
-			$(window).resize(function() {
-				if ((container.width() != cw) || (container.height() != ch)) {
-					cw = container.width();
-					if (!is_fullview) ch = container.height();
-					var pos = content.position();
-					if (pos.left < cw - iw) content.css('left', cw - iw);
-					if (pos.top < ch - ih) content.css('top', ch - ih);
-					if (callback) callback(container, content, iw, ih, cw, ch);
-				}
-			});
-			if (config.animate == '1' || config.animate == 'right' || config.animate == 'left') {
-				var turnLeft = config.animate == 'left';
-				var turnLoop = config.mode == 'drag360';
-				var leftEnd; // Stop (or turn-around) position
-				if (turnLoop)
-					leftEnd = turnLeft ? -iw : 0
-				else
-					leftEnd = turnLeft ? self.parsePos('left', iw, cw) : self.parsePos('right', iw, cw);
-				var animate_loop = function(c) {
-					c.css('left', turnLeft ? c.position().left + iw : c.position().left - iw);
-					c.animate({
-							left : leftEnd
-						}, 10 * Math.abs(iw), 'linear', function() {
-							setTimeout(function() {
-								animate_loop(c);
-							}, 1);
-						});
-				};
-				content.each(function() {
-					$(this).animate({
-						left : leftEnd
-					}, 10 * Math.abs(leftEnd - leftStart), 'linear', function() {
-						if (turnLoop)
-							animate_loop($(this));
-					});
-				});
-			}
-			else if (config.animate == 'zoom') {
-				var savePos = content.position();
-				container.mouseenter(function(event) {
-					// Un-zoom, i.e. reset original size
-					image.css('width', 'auto');
-					content.removeClass('zoomed');
-					content.css({'left': savePos.left, 'top': savePos.top});
-					// Reset content width where necessary:
-					if (callback) callback(container, content, iw, ih, cw, ch);
-					is_fullview = false;
-				});
-				container.mouseleave(function(event) {
-					// Zoom out
-					savePos = content.position();
-					image.css('width', '100%');
-					content.addClass('zoomed');
-					content.css({'left': '', 'top': '', 'width': ''});
-					is_fullview = true;
-				});
-				container.trigger("mouseleave");
-			}
-		};
-
-		// Calls the appropriate init method above depending on the mode parameter.
-		this.initMode = function(container) {
-			var callback;
-			switch (config.mode) {
-				case 'move':
-					callback = self.initMove(container);
-					break;
-				case 'drag':
-					callback = self.initDrag(container);
-					break;
-				case 'drag360':
-					callback = self.initDrag360(container);
-					break;
-			}
-			container.find('.image').one('load', function() {
-				self.imageLoaded(container, callback);
-			}).each(function() {
-				if (this.complete) $(this).load();
-			});
-		};
-
-		// Initializes the ColorBox popup.
-		this.initColorbox = function(popup) {
-			var container = popup.children('.container');
-			var content = container.children('.content');
-			image.colorbox({
-				maxWidth : '100%',
-				maxHeight : '100%',
-				width : self.getImageWidth(),
-				inline : true,
-				href : popup,
-				onOpen : function() {
-					container.css('width', 'auto');
-					container.css('height', self.getImageHeight());
-					content.css('background-repeat', 'repeat');
-					content.css('height', self.getImageHeight());
-				},
-				onComplete : function() {
-					popup.each(function () {
-						var container = $(this).children('.container');
-						var innerHeight = $(this).parent().innerHeight();
-						if (innerHeight < $(this).height()) {
-							container.css('height', innerHeight);
-						}
-						self.initMode(container);
-					});
-				}
-			});
-		};
-
-		// Initialize on jQuery.ready event, do as much as possible to use the time while loading the image
-		this.init = function(c) {
-			config = c;
-			inline.css('display', 'block'); // unhide (skip load optimization)
-			self.initMode(inline);
-			if (config.popup == 'colorbox') {
-				if ($().colorbox) {
-					self.initColorbox(elem.find('.popup'));
-				}
-			}
-			if (config.label != 'none') {
-				label = document.createElement('div');
-				label.className = 'label';
-				inline.append(label);
-				elem.hover(function() { $(label).fadeTo('fast', 0.0); }, function() { $(label).fadeTo('fast', 1.0); });
-			}
-		};
-	};
-
-	this.each(function() {
-		var photonav = new PhotoNav($(this));
-		var config = settings ? $.extend({}, defaults, settings) : $.extend({}, defaults)
-		photonav.init(config);
 	});
 
-	return this;
-};
+	$.fn.photoNav = function( settings ) {
+		var defaults = {
+			mode: 'move',
+			popup: 'none',
+			animate: 'right',
+			position: 'center',
+			label: 'none',
+		};
 
-}(jQuery));
+		function PhotoNav( elem ) {
+			var self = this;
+
+			// Parse the position parameters
+			function parsePos( position, dimage, dcontainer ) {
+				var result;
+				switch ( position ) {
+					case 'center':
+						result = ( dcontainer - dimage ) / 2;
+						break;
+					case 'left':
+					case 'top':
+						result = ( dcontainer - dimage );
+						break;
+					case 'right':
+					case 'bottom':
+						result = 0;
+						break;
+					default:
+						result = parseFloat( position );
+						break;
+				}
+				return result;
+			}
+
+			function Container( container, photonav ) {
+				var content = container.find( '.content' ),
+					cw = container.width(),
+					ch = container.height(),
+					iw = photonav.image[0].scrollWidth,
+					ih = photonav.image[0].scrollHeight,
+					is_fullview = false,
+					leftStart = 0,
+					callback;
+
+				function initMove() {
+					container.mousemove(function( event ) {
+						var offset = $( this ).offset(),
+							curX = ( event.pageX - offset.left ) * ( 1 - iw / this.offsetWidth ),
+							curY = ( event.pageY - offset.top ) * ( 1 - ih / this.offsetHeight );
+						content.stop(); // stop animation
+						content.css( 'left', curX > 0 ? 0 : curX );
+						content.css( 'top', curY > 0 ? 0 : curY );
+					});
+				}
+
+				function initDrag() {
+					content.draggable({
+						start: function( event, ui ) {
+							$( this ).stop(); // stop animation
+						},
+						drag: function( event, ui ) {
+							return ( ! is_fullview );
+						},
+						scroll: false
+					});
+					// Return a callback that gets called when the image is loaded
+					return function() {
+						var co = container.offset();
+						content.draggable(
+							'option',
+							'containment',
+							[ co.left + cw - iw, co.top + ch - ih, co.left, co.top ] );
+					}
+				}
+
+				function initDrag360() {
+					content.draggable({
+						start: function( event, ui ) {
+							$( this ).stop(); // stop animation
+							ui.helper.wrapwidth = iw;
+						},
+						drag: function( event, ui ) {
+							return ( ! is_fullview );
+						},
+						scroll: false,
+						infinite: true // activate the plugin defined above
+					});
+					// Return a callback that gets called when the image is loaded
+					return function() {
+						var co = container.offset();
+						content.css( 'width', iw + cw + 2 ); // for 360 mode, the dragable content is enlarged
+						content.draggable(
+							'option',
+							'containment',
+							[ , co.top + ch - ih, , co.top ] );
+					}
+				}
+
+				function initAutoScroll() {
+					var turnLeft = 'left' === photonav.config.animate,
+						turnLoop = 'drag360' === photonav.config.mode,
+						leftEnd; // Stop (or turn-around) position
+
+					function animate_loop( content ) {
+						content.css( 'left',
+						       turnLeft ?
+						       content.position().left + iw :
+						       content.position().left - iw );
+						content.animate( {
+								left: leftEnd
+							},
+							10 * Math.abs( iw ),
+							'linear',
+							function() {
+								setTimeout( function() {
+										animate_loop( content );
+									},
+									1 );
+							} );
+					}
+
+					if ( turnLoop ) {
+						leftEnd = turnLeft ?
+						          - iw :
+						          0;
+					} else {
+						leftEnd = turnLeft ?
+						          parsePos( 'left', iw, cw ) :
+						          parsePos( 'right', iw, cw );
+					}
+
+					content.each(function() {
+						$( this ).animate( {
+								left: leftEnd
+							},
+							10 * Math.abs( leftEnd - leftStart ),
+							'linear',
+							function() {
+								if ( turnLoop ) {
+									animate_loop( $( this ) );
+								}
+							} );
+					});
+				}
+
+				function initZoom() {
+					var savePos = content.position();
+					container.mouseenter(function( event ) {
+						// Un-zoom, i.e. reset original size
+						photonav.image.css( 'width', 'auto' );
+						content.removeClass( 'zoomed' );
+						content.css({
+								'left': savePos.left,
+								'top': savePos.top
+						});
+						// Reset content width where necessary:
+						if ( undefined !== callback ) {
+							callback();
+						}
+						is_fullview = false;
+					});
+					container.mouseleave(function( event ) {
+						// Zoom out
+						savePos = content.position();
+						photonav.image.css( 'width', '100%' );
+						content.addClass( 'zoomed' );
+						content.css({
+							'left': '',
+							'top': '',
+							'width': ''
+						});
+						is_fullview = true;
+					});
+					container.trigger( 'mouseleave' );
+				}
+
+				function setupDimensions() {
+					leftStart = parsePos( photonav.config.position, iw, cw );
+					if ( 0 === ch ) {
+						ch = ih; // ... otherwise use the image height
+						container.height( ch + 'px' );
+					}
+					content.css( 'left', leftStart );
+					content.css( 'top', Math.min( 0, ( ch - ih ) / 2 ) );
+					if ( callback !== undefined ) {
+						callback();
+					}
+					$( window ).resize( function() {
+						if ( ( container.width() !== cw ) || ( container.height() !== ch ) ) {
+							cw = container.width();
+							if ( ! is_fullview ) {
+								ch = container.height();
+							}
+							if ( content.position().left < cw - iw ) {
+								content.css( 'left', cw - iw );
+							}
+							if ( content.position().top < ch - ih ) {
+								content.css( 'top', ch - ih );
+							}
+							if ( callback !== undefined ) {
+								callback();
+							}
+						}
+					} );
+				}
+
+				function imageLoaded() {
+					iw = photonav.image[0].scrollWidth;
+					ih = photonav.image[0].scrollHeight;
+					cw = container.width();
+					ch = container.height();
+
+					setupDimensions();
+
+					var anim = photonav.config.animate;
+
+					if ( '1' === anim || 'right' === anim || 'left' === anim ) {
+						initAutoScroll();
+					} else if ( 'zoom' === anim ) {
+						initZoom();
+					}
+				}
+
+				// Call the appropriate init method above depending on the mode parameter.
+				switch ( photonav.config.mode ) {
+					case 'move':
+						callback = initMove();
+						break;
+					case 'drag':
+						callback = initDrag();
+						break;
+					case 'drag360':
+						callback = initDrag360();
+						break;
+				}
+
+				container
+					.find( '.image' )
+					.one( 'load', imageLoaded )
+					.each(function() {
+						if ( this.complete ) {
+							$( this ).load();
+						}
+					});
+			}
+
+			// Initializes the ColorBox popup.
+			function initColorbox() {
+				var popup = elem.find( '.popup' ),
+					container = popup.children( '.container' ),
+					content = container.children( '.content' );
+				self.image.colorbox({
+					maxWidth: '100%',
+					maxHeight: '100%',
+					width: image[0].scrollWidth,
+					inline: true,
+					href: popup,
+					onOpen: function() {
+						container.css({
+							'width': 'auto',
+							'height': getImageHeight(),
+						});
+						content.css( 'background-repeat', 'repeat' );
+						content.css( 'height', image[0].scrollHeight );
+					},
+					onComplete: function() {
+						popup.each(function() {
+							var container = $( this ).children( '.container' ),
+								innerHeight = $( this ).parent().innerHeight();
+							if ( innerHeight < $( this ).height() ) {
+								container.css( 'height', innerHeight );
+							}
+							var c_popup = new Container( container, self );
+						});
+					}
+				});
+			}
+
+			// Initialize on jQuery.ready event, do as much as possible to use the time while loading the image
+			this.init = function( config ) {
+				var inline = elem.children( '.container' );
+
+				self.config = config;
+				self.image = inline.find( '.image' );
+
+				inline.css( 'display', 'block' ); // unhide (skip load optimization)
+
+				var c_inline = new Container( inline, self );
+
+				if ( 'colorbox' === config.popup ) {
+					if ( undefined !== $().colorbox ) {
+						initColorbox();
+					}
+				}
+
+				if ( 'none' !== config.label ) {
+					label = document.createElement( 'div' );
+					label.className = 'label';
+					inline.append( label );
+					elem.hover(function() {
+						$( label ).fadeTo( 'fast', 0.0 );
+					}, function() {
+						$( label ).fadeTo( 'fast', 1.0 );
+					});
+				}
+			};
+		};
+
+		this.each(function() {
+			var photonav = new PhotoNav( $( this ) );
+			var config = undefined !== settings ?
+			             $.extend( {}, defaults, settings ) :
+			             $.extend( {}, defaults )
+			photonav.init( config );
+		});
+
+		return this;
+	};
+
+})( jQuery );

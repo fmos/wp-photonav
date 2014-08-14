@@ -1,40 +1,40 @@
-.photonav div,.photonav img {
-	border: 0 none !important;
+.photonav div,
+.photonav img {
 	padding: 0 !important;
+	border: 0 none !important;
 }
 
 .photonav>.container {
-	position: relative;
-	overflow: hidden;
 	display: none;
+	overflow: hidden;
+	position: relative;
 	margin: 0;
 }
 
 .photonav>.container>.label {
-    background: url("moveme.png") no-repeat scroll right top transparent;
-    width: 119px;
-    height: 44px;
-    position: absolute;
-    right: 25px;
-    top: 25px;
-    z-index: 100;
+	position: absolute;
+	z-index: 100;
+	width: 119px;
+	height: 44px;
+	right: 25px;
+	top: 25px;
+	background: url("moveme.png") no-repeat scroll right top transparent;
 }
 
 .photonav>.container>.content {
 	position: absolute;
+	margin: 0;
 	background-position: top left;
 	background-repeat: repeat-x;
-	margin: 0;
 }
 
 .photonav>.container>.content.zoomed {
 	position: relative;
 	width: 100%;
-	vertical-align: middle;
 }
 
 /* Override theme settings for img elements using 3 classes and 1 id for precedence */
-.photonav>.container>.content>#photonav-image,.photonav>.container>.dragconstraint>.content>#photonav-image {
+.photonav>.container>.content>#photonav-image {
 	display: block;
 	box-shadow: none;
 	max-height: none;

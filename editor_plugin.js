@@ -1,8 +1,8 @@
 (function() {
 	// Load plugin specific language pack
-	tinymce.PluginManager.requireLangPack('photonav');
+	tinymce.PluginManager.requireLangPack( 'photonav' );
 
-	tinymce.create('tinymce.plugins.PhotoNav', {
+	tinymce.create( 'tinymce.plugins.PhotoNav', {
 		/**
 		 * Initializes the plugin, this will be executed after the plugin has been created.
 		 * This call is done before the editor instance has finished it's initialization so use the onInit event
@@ -11,27 +11,25 @@
 		 * @param {tinymce.Editor} ed Editor instance that the plugin is initialized in.
 		 * @param {string} url Absolute URL to where the plugin is located.
 		 */
-		init : function(ed, url) {
+		init : function( ed, url ) {
 			// Register wp-photonav button
-			ed.addButton('add_photonav', {
+			ed.addButton( 'add_photonav', {
 				title : 'photonav.add_photonav',
 				image : url + '/media-button-fullscreen.gif',
 				onclick : function() {
-					tb_show('', tinymce.DOM.get('add_photonav').href);
-					tinymce.DOM.setStyle( ['TB_overlay','TB_window','TB_load'], 'z-index', '999999' );
+					tb_show( '', tinymce.DOM.get( 'add_photonav' ).href );
+					tinymce.DOM.setStyle( [ 'TB_overlay','TB_window','TB_load' ], 'z-index', '999999' );
 				}
 			});
 
-			// Add a node change handler, selects the button in the UI when a image is selected
-			ed.onNodeChange.add(function(ed, cm, n) {
-				// cm.setActive('photonav', n.nodeName == 'IMG');
-			});
-
 			// Add Media button to fullscreen
-			ed.onBeforeExecCommand.add(function(ed, cmd, ui, val) {
-				if ( 'mceFullScreen' != cmd ) return;
-				if ( 'mce_fullscreen' != ed.id )
+			ed.onBeforeExecCommand.add(function( ed, cmd, ui, val ) {
+				if ( 'mceFullScreen' !== cmd ) {
+					return;
+				}
+				if ( 'mce_fullscreen' !== ed.id ) {
 					ed.settings.theme_advanced_buttons1 += ',|,add_photonav';
+				}
 			});
 		},
 
@@ -45,7 +43,7 @@
 		 * @param {tinymce.ControlManager} cm Control manager to use inorder to create new control.
 		 * @return {tinymce.ui.Control} New control instance or null if no control was created.
 		 */
-		createControl : function(n, cm) {
+		createControl : function( n, cm ) {
 			return null;
 		},
 
@@ -61,11 +59,11 @@
 				author : 'Fabian Stanke',
 				authorurl : 'http://fmos.at',
 				infourl : 'http://fmos.at/wp-photonav',
-				version : "1.1"
+				version : "1.2"
 			};
 		}
 	});
 
 	// Register plugin
-	tinymce.PluginManager.add('photonav', tinymce.plugins.PhotoNav);
+	tinymce.PluginManager.add( 'photonav', tinymce.plugins.PhotoNav );
 })();
