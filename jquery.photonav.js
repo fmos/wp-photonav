@@ -36,7 +36,7 @@
 		var defaults = {
 			mode: 'move',
 			popup: 'none',
-			animate: 'right',
+			animate: 'none',
 			position: 'center',
 			label: 'none',
 		};

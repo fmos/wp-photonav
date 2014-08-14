@@ -1,58 +1,69 @@
 (function() {
-	// Load plugin specific language pack
 	tinymce.PluginManager.requireLangPack( 'photonav' );
 
 	tinymce.create( 'tinymce.plugins.PhotoNav', {
-		/**
-		 * Initializes the plugin, this will be executed after the plugin has been created.
-		 * This call is done before the editor instance has finished it's initialization so use the onInit event
-		 * of the editor instance to intercept that event.
-		 *
-		 * @param {tinymce.Editor} ed Editor instance that the plugin is initialized in.
-		 * @param {string} url Absolute URL to where the plugin is located.
-		 */
-		init : function( ed, url ) {
-			// Register wp-photonav button
-			ed.addButton( 'add_photonav', {
-				title : 'photonav.add_photonav',
-				image : url + '/media-button-fullscreen.gif',
-				onclick : function() {
-					tb_show( '', tinymce.DOM.get( 'add_photonav' ).href );
-					tinymce.DOM.setStyle( [ 'TB_overlay','TB_window','TB_load' ], 'z-index', '999999' );
-				}
-			});
 
-			// Add Media button to fullscreen
-			ed.onBeforeExecCommand.add(function( ed, cmd, ui, val ) {
-				if ( 'mceFullScreen' !== cmd ) {
-					return;
-				}
-				if ( 'mce_fullscreen' !== ed.id ) {
-					ed.settings.theme_advanced_buttons1 += ',|,add_photonav';
-				}
+		init : function( ed, url ) {
+			ed.addButton( 'photonav', {
+				title : 'WP-PhotoNav shortcode',
+				cmd : 'photonav_dlg',
+				image : url + '/media-button-fullscreen.gif',
+			});
+			ed.addCommand( 'photonav_dlg', function() {
+				ed.windowManager.open({
+					title: 'WP-PhotoNav',
+					body: [
+						{ type: 'textbox', name: 'url', label: ed.getLang( 'photonav.image_url' ) },
+						{ type: 'listbox', name: 'mode', label: ed.getLang( 'photonav.mode' ), values: [
+							{ text: ed.getLang( 'photonav.mode_move' ), value: 'move' },
+							{ text: ed.getLang( 'photonav.mode_drag' ), value: 'drag' },
+							{ text: ed.getLang( 'photonav.mode_360' ), value: 'drag360' },
+						] },
+						{ type: 'listbox', name: 'popup', label: ed.getLang( 'photonav.popup' ), values: [
+							{ text: ed.getLang( 'photonav.pop_none' ), value: 'none' },
+							{ text: ed.getLang( 'photonav.pop_colorbox' ), value: 'colorbox' },
+						] },
+						{ type: 'listbox', name: 'animate', label: ed.getLang( 'photonav.animation' ), values: [
+							{ text: ed.getLang( 'photonav.ani_none' ), value: 'none' },
+							{ text: ed.getLang( 'photonav.ani_left' ), value: 'left' },
+							{ text: ed.getLang( 'photonav.ani_right' ), value: 'right' },
+							{ text: ed.getLang( 'photonav.ani_zoom' ), value: 'zoom' },
+						] },
+						{ type: 'listbox', name: 'position', label: ed.getLang( 'photonav.position' ), values: [
+							{ text: ed.getLang( 'photonav.pos_center' ), value: 'center' },
+							{ text: ed.getLang( 'photonav.pos_left' ), value: 'left' },
+							{ text: ed.getLang( 'photonav.pos_right' ), value: 'right' },
+						] },
+						{ type: 'checkbox', name: 'label', label: ed.getLang( 'photonav.label' )},
+						{ type: 'textbox', name: 'width', label: ed.getLang( 'photonav.width' )},
+						{ type: 'textbox', name: 'height', label: ed.getLang( 'photonav.height' )},
+					],
+					onSubmit: function( e ) {
+						var output = '';
+						// setup the output of our shortcode
+						output = '[photonav ';
+						output += 'url=' + e.data.url + ' ';
+						output += 'mode=' + e.data.mode + ' ';
+						output += 'popup=' + e.data.popup + ' ';
+						output += 'animate=' + e.data.animate + ' ';
+						output += 'position=' + e.data.position + ' ';
+						if ( e.data.label === true ) {
+							output += 'label=true ';
+						}
+						output += 'container_width=' + e.data.width + ' ';
+						output += 'container_height=' + e.data.height + ']';
+						ed.execCommand( 'mceInsertContent', false, output );
+					},
+				}, {
+					plugin_url : url,
+				});
 			});
 		},
 
-		/**
-		 * Creates control instances based in the incomming name. This method is normally not
-		 * needed since the addButton method of the tinymce.Editor class is a more easy way of adding buttons
-		 * but you sometimes need to create more complex controls like listboxes, split buttons etc then this
-		 * method can be used to create those.
-		 *
-		 * @param {String} n Name of the control to create.
-		 * @param {tinymce.ControlManager} cm Control manager to use inorder to create new control.
-		 * @return {tinymce.ui.Control} New control instance or null if no control was created.
-		 */
 		createControl : function( n, cm ) {
 			return null;
 		},
 
-		/**
-		 * Returns information about the plugin as a name/value array.
-		 * The current keys are longname, author, authorurl, infourl and version.
-		 *
-		 * @return {Object} Name/value array containing information about the plugin.
-		 */
 		getInfo : function() {
 			return {
 				longname : 'WP-PhotoNav plugin',

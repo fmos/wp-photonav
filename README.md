@@ -2,7 +2,7 @@ WP-PhotoNav
 ===========
 
 WP-PhotoNav is a WordPress plugin. It is a complete rewrite of a JavaScript
-snippet called PhotoNav (originally by Gaya Kessler). It provides for easy 
+snippet called PhotoNav (originally by Gaya Kessler). It provides for easy
 integration of panorama pictures in a WordPress page via a shortcode.
 The user can “rotate” the view of the panorama by moving the mouse over the
 image area or dragging the image. Additional feature include an integration
@@ -25,9 +25,9 @@ Please download this plugin from the [WordPress plugin directory][directory].
 Usage
 -----
 
-You can use WP-PhotoNav either via WordPress shortcodes or via the media 
-button on top of the editor, which will show a dialogue similar to the ones 
-you know from inserting common images. The dialog does nothing more than 
+You can use WP-PhotoNav either via WordPress shortcodes or via the media
+button on top of the editor, which will show a dialogue similar to the ones
+you know from inserting common images. The dialog does nothing more than
 automatically generating the shortcode for you. Below are some examples for
 possible shortcodes to be used within your posts or articles. To see some
 working examples, please visit the [plugin page][plugin].
@@ -41,32 +41,32 @@ specify the URL of the image:
 
 ### Advanced
 
-For more sophistication, WP-PhotoNav accepts a number of parameters, most of 
+For more sophistication, WP-PhotoNav accepts a number of parameters, most of
 which are demonstrated in the following example:
 
     [photonav url='/wp-uploads/2014/07/panorama.jpg' container_height=300
-    mode=drag360 popup=colorbox animate=left position=right label=1]
+    mode=drag360 popup=colorbox animate=left position=right label=true]
 
 Here is a list of the employed parameters and their meaning:
 
-*   `container_height` -- Defines the height of the displayed frame (hence the 
-    container). If the image is higher than the given height, vertical 
-    scrolling (or dragging) is enabled. The unit is one pixel. There is also 
-    the parameter container_width in case you don’t want the frame to fill the 
+*   `container_height` -- Defines the height of the displayed frame (hence the
+    container). If the image is higher than the given height, vertical
+    scrolling (or dragging) is enabled. The unit is one pixel. There is also
+    the parameter container_width in case you don’t want the frame to fill the
     horizontal space available in the post or page.
-*   `mode` -- Specifies one of the following modes: move, drag or drag360 where 
-    move is the default mode and doesn’t have to be specified. The drag mode 
-    allows the user to navigate the panorama by dragging it inside the frame. 
-    The drag360 mode is similar, but generates the illusion of an vertically 
-    infinite image. This is useful for 360° panoramas where the user can turn 
+*   `mode` -- Specifies one of the following modes: move, drag or drag360 where
+    move is the default mode and doesn’t have to be specified. The drag mode
+    allows the user to navigate the panorama by dragging it inside the frame.
+    The drag360 mode is similar, but generates the illusion of an vertically
+    infinite image. This is useful for 360° panoramas where the user can turn
     around in each direction infinitely.
-*   `popup` -- If specified, enables a popup for enlarged view. The only valid 
-    popup type at the moment is colorbox, which only works if the 
+*   `popup` -- If specified, enables a popup for enlarged view. The only valid
+    popup type at the moment is colorbox, which only works if the
     [ColorBox][colorbox] plugin for jQuery is available. It is provided e.g. by
-    the [jQuery Colorbox plugin][cbplugin]. You have to install this plugin 
+    the [jQuery Colorbox plugin][cbplugin]. You have to install this plugin
     separately to make use of the popup functionality.
-*   `animate` -- If specified, enables one of the following animation modes: 
-    left, right or zoom. By using this option, the panorama can be rotated 
+*   `animate` -- If specified, enables one of the following animation modes:
+    left, right or zoom. By using this option, the panorama can be rotated
     automatically starting from the `position` into the named direction until
     either the user interacts with it (by scrolling in move mode or dragging in
     one of the drag modes) or the image is scrolled through entierely once.
@@ -78,12 +78,12 @@ Here is a list of the employed parameters and their meaning:
     image. Please note that the animation (like everything else) is
     accomplished using JavaScript and might not be 100% fluid on all systems
     and browsers.
-*   `position` -- Defines the initial horizontal postion. The parameter may 
+*   `position` -- Defines the initial horizontal postion. The parameter may
     be a pixel value for horizontal displacement or take any one of the
-    following relative values, for which the corresponding pixel value is 
+    following relative values, for which the corresponding pixel value is
     automatically calculated: center, left or right.
-*   `label` -– If this option is enabled, an overlay will be displayed in the 
-    top right corner of the image to inform the user of the additional 
+*   `label` -– If this option is enabled, an overlay will be displayed in the
+    top right corner of the image to inform the user of the additional
     capabilities.
 
 Developer remarks
@@ -112,7 +112,7 @@ to 0.
 
 ### Interaction with Subversion
 
-The master branch mirrors the SVN trunk used for publication. Development 
+The master branch mirrors the SVN trunk used for publication. Development
 happens in the progress branch and is rebased to master. Synchronisation with
 SVN is achieved by `git-svn`.
 

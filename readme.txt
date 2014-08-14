@@ -1,9 +1,9 @@
 === WP-PhotoNav ===
 Contributors: fmos, Norman Stanke
-Donate link: 
+Donate link:
 Tags: panorama, image, photo, picture, photonav, jquery, scroll, 360, colorbox, autoscroll
 Requires at least: 2.8
-Tested up to: 3.9.1
+Tested up to: 3.9.2
 Stable tag: 1.2
 
 Provides a scrolling field without scrollbars for pictures with huge horizontal dimensions. Especially useful for panorama pictures.
@@ -32,6 +32,7 @@ Further reading:
 * Feature: Animation direction configurable
 * Feature: Zoom animation mode
 * Feature: Support for drag mode on touch interfaces
+* Feature: New editor dialog (replaces outdated media insert dialog)
 
 = 1.1.0 =
 * Feature: Initial position can be configured
