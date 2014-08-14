@@ -20,11 +20,17 @@
     z-index: 100;
 }
 
-.photonav>.container>.content,.photonav>.container>.dragconstraint>.content {
+.photonav>.container>.content {
 	position: absolute;
 	background-position: top left;
 	background-repeat: repeat-x;
 	margin: 0;
+}
+
+.photonav>.container>.content.zoomed {
+	position: relative;
+	width: 100%;
+	vertical-align: middle;
 }
 
 /* Override theme settings for img elements using 3 classes and 1 id for precedence */

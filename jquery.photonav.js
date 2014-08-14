@@ -39,7 +39,6 @@ $.fn.photoNav = function(settings) {
 		animate : '0',
 		position : 'center',
 		label : 'none',
-		fullview : '0',
 	};
 
 	function PhotoNav(elem) {
@@ -139,7 +138,7 @@ $.fn.photoNav = function(settings) {
 			var ch = container.height(); // determine whether a manually assigned height is used
 			if (ch == 0) {
 				ch = ih; // ... otherwise use the image height
-				container.height(ch);
+				container.height(ch + 'px');
 			}
 			var leftStart = self.parsePos(config.position, iw, cw);
 			content.css('left', leftStart);
@@ -155,39 +154,50 @@ $.fn.photoNav = function(settings) {
 					if (callback) callback(container, content, iw, ih, cw, ch);
 				}
 			});
-			if (config.animate == '1') {
-				var leftEnd = self.parsePos('right', iw, cw);
-				animate_loop = function(c) {
-					c.css('left', c.position().left - iw);
+			if (config.animate == '1' || config.animate == 'right' || config.animate == 'left') {
+				var turnLeft = config.animate == 'left';
+				var turnLoop = config.mode == 'drag360';
+				var leftEnd; // Stop (or turn-around) position
+				if (turnLoop)
+					leftEnd = turnLeft ? -iw : 0
+				else
+					leftEnd = turnLeft ? self.parsePos('left', iw, cw) : self.parsePos('right', iw, cw);
+				var animate_loop = function(c) {
+					c.css('left', turnLeft ? c.position().left + iw : c.position().left - iw);
 					c.animate({
-						left : leftEnd
-					}, 10 * Math.abs(iw), 'linear', function() {
-						setTimeout(function() {
-							animate_loop(c);
-						}, 1);
-					});
+							left : leftEnd
+						}, 10 * Math.abs(iw), 'linear', function() {
+							setTimeout(function() {
+								animate_loop(c);
+							}, 1);
+						});
 				};
 				content.each(function() {
 					$(this).animate({
 						left : leftEnd
 					}, 10 * Math.abs(leftEnd - leftStart), 'linear', function() {
-						if (config.mode == 'drag360') animate_loop($(this));
+						if (turnLoop)
+							animate_loop($(this));
 					});
 				});
 			}
-			if (config.fullview == '1') {
+			else if (config.animate == 'zoom') {
+				var savePos = content.position();
 				container.mouseenter(function(event) {
+					// Un-zoom, i.e. reset original size
 					image.css('width', 'auto');
-					content.css('position', 'absolute');
-					container.height(ch);
+					content.removeClass('zoomed');
+					content.css({'left': savePos.left, 'top': savePos.top});
+					// Reset content width where necessary:
+					if (callback) callback(container, content, iw, ih, cw, ch);
 					is_fullview = false;
 				});
 				container.mouseleave(function(event) {
-					content.css('position', 'relative');
-					content.css('left', 0);
-					content.css('top', 0);
+					// Zoom out
+					savePos = content.position();
 					image.css('width', '100%');
-					container.height('auto');
+					content.addClass('zoomed');
+					content.css({'left': '', 'top': '', 'width': ''});
 					is_fullview = true;
 				});
 				container.trigger("mouseleave");

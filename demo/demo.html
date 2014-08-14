@@ -10,7 +10,8 @@
 </head>
 <body>
     <h1>WP-PhotoNav Demo</h1>
-    <div class="photonav" id="84ddd9f54896482d">
+    <h2>Right</h2>
+    <div class="photonav" id="first">
         <div class="container" style="width: auto; height: auto;">
             <div class="content" style="background-image: url(panorama.jpg);">
                 <img id="photonav-image" class="image colorbox-off" src="panorama.jpg">
@@ -25,7 +26,43 @@
                 </div>
             </div>
         </div>
-        <script type="text/javascript">jQuery(document).ready(function(){jQuery("#84ddd9f54896482d").photoNav({id:"84ddd9f54896482d",mode:"drag",popup:"none",animate:"",position:"center",fullview:"1"});});</script>
+        <script type="text/javascript">jQuery(document).ready(function(){jQuery("#first").photoNav({id:"first",mode:"drag360",popup:"none",animate:"right",position:"center"});});</script>
+    </div>
+    <h2>Left</h2>
+    <div class="photonav" id="second">
+        <div class="container" style="width: auto; height: auto;">
+            <div class="content" style="background-image: url(panorama_alt.jpg);">
+                <img id="photonav-image" class="image colorbox-off" src="panorama_alt.jpg">
+            </div>
+        </div>
+        <div style="display: none;">
+            <div class="photonav popup">
+                <div class="container" style="display: block; overflow: hidden;">
+                    <div class="content" style="background-image: url(panorama_alt.jpg);">
+                        <img id="photonav-image" class="image colorbox-off" src="panorama_alt.jpg">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">jQuery(document).ready(function(){jQuery("#second").photoNav({id:"second",mode:"drag",popup:"none",animate:"left",position:"right"});});</script>
+    </div>
+    <h2>Full</h2>
+    <div class="photonav" id="third">
+        <div class="container" style="width: auto; height: auto;">
+            <div class="content" style="background-image: url(panorama.jpg);">
+                <img id="photonav-image" class="image colorbox-off" src="panorama.jpg">
+            </div>
+        </div>
+        <div style="display: none;">
+            <div class="photonav popup">
+                <div class="container" style="display: block; overflow: hidden;">
+                    <div class="content" style="background-image: url(panorama.jpg);">
+                        <img id="photonav-image" class="image colorbox-off" src="panorama.jpg">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">jQuery(document).ready(function(){jQuery("#third").photoNav({id:"third",mode:"drag360",popup:"none",animate:"zoom",position:"center"});});</script>
     </div>
     <p>The End</p>
 </body>
