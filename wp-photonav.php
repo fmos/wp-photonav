@@ -4,7 +4,7 @@
  Plugin URI: http://fmos.at/wp-photonav
  Description: Provides a scrolling field without scrollbars for huge pictures.
  Especially useful for panorama pictures.
- Version: 1.2.0
+ Version: 1.2.1
  Author: Fabian Stanke
  Author URI: http://fmos.at
  License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html

@@ -1,8 +1,8 @@
 /*
  *  PhotoNavigation for WordPress "WP-PhotoNav"
  *
- *  Version: 1.2.0
- *  Date: 14-07-12
+ *  Version: 1.2.1
+ *  Date: 16-08-14
  *  Author: Fabian Stanke
  *  Author URI: http://fmos.at
  *  License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -82,8 +82,10 @@
 							curX = ( event.pageX - offset.left ) * ( 1 - iw / this.offsetWidth ),
 							curY = ( event.pageY - offset.top ) * ( 1 - ih / this.offsetHeight );
 						content.stop(); // stop animation
-						content.css( 'left', curX > 0 ? 0 : curX );
-						content.css( 'top', curY > 0 ? 0 : curY );
+						content.css({
+							left: Math.min( 0, curX ),
+							top: Math.min( 0, curY ),
+						});
 					});
 				}
 
@@ -184,8 +186,8 @@
 						photonav.image.css( 'width', 'auto' );
 						content.removeClass( 'zoomed' );
 						content.css({
-								'left': savePos.left,
-								'top': savePos.top
+							left: savePos.left,
+							top: savePos.top
 						});
 						// Reset content width where necessary:
 						if ( undefined !== callback ) {
@@ -199,9 +201,9 @@
 						photonav.image.css( 'width', '100%' );
 						content.addClass( 'zoomed' );
 						content.css({
-							'left': '',
-							'top': '',
-							'width': ''
+							left: '',
+							top: '',
+							width: '',
 						});
 						is_fullview = true;
 					});
@@ -214,8 +216,10 @@
 						ch = ih; // ... otherwise use the image height
 						container.height( ch + 'px' );
 					}
-					content.css( 'left', leftStart );
-					content.css( 'top', Math.min( 0, ( ch - ih ) / 2 ) );
+					content.css({
+						left: leftStart,
+						top: Math.min( 0, ( ch - ih ) / 2 ),
+					});
 					if ( callback !== undefined ) {
 						callback();
 					}
@@ -276,36 +280,28 @@
 							$( this ).load();
 						}
 					});
-			}
+			} // end function Container
 
 			// Initializes the ColorBox popup.
 			function initColorbox() {
-				var popup = elem.find( '.popup' ),
-					container = popup.children( '.container' ),
-					content = container.children( '.content' );
+				var popup = elem.find( '.popup' ).first(),
+					container = popup.children( '.container' ).first(),
+					content = container.children( '.content' ).first();
 				self.image.colorbox({
 					maxWidth: '100%',
 					maxHeight: '100%',
-					width: image[0].scrollWidth,
+					width: self.image[0].scrollWidth,
 					inline: true,
 					href: popup,
 					onOpen: function() {
-						container.css({
-							'width': 'auto',
-							'height': getImageHeight(),
-						});
-						content.css( 'background-repeat', 'repeat' );
-						content.css( 'height', image[0].scrollHeight );
+						container.height( self.image[0].scrollHeight );
 					},
 					onComplete: function() {
-						popup.each(function() {
-							var container = $( this ).children( '.container' ),
-								innerHeight = $( this ).parent().innerHeight();
-							if ( innerHeight < $( this ).height() ) {
-								container.css( 'height', innerHeight );
-							}
-							var c_popup = new Container( container, self );
-						});
+						var ph = popup.parent().innerHeight();
+						if ( ph < popup.height() ) {
+							container.height( ph );
+						}
+						var c_popup = new Container( container, self );
 					}
 				});
 			}
@@ -315,7 +311,7 @@
 				var inline = elem.children( '.container' );
 
 				self.config = config;
-				self.image = inline.find( '.image' );
+				self.image = inline.find( '.image' ).first();
 
 				inline.css( 'display', 'block' ); // unhide (skip load optimization)
 

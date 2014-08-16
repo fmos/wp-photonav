@@ -1,10 +1,10 @@
 === WP-PhotoNav ===
-Contributors: fmos, Norman Stanke
+Contributors: fmos, NoSta
 Donate link:
 Tags: panorama, image, photo, picture, photonav, jquery, scroll, 360, colorbox, autoscroll
 Requires at least: 2.8
 Tested up to: 3.9.2
-Stable tag: 1.2
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,9 @@ Further reading:
 4. Include PhotoNav in your post by entering `[photonav url='/wp-content/uploads/2010/08/panorama.jpg']`.
 
 == Changelog ==
+
+= 1.2.1 =
+* Bugfix: Fixed Colorbox popup
 
 = 1.2.0 =
 * Feature: Animation direction configurable
