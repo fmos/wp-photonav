@@ -4,7 +4,7 @@
  Plugin URI: http://fmos.at/wp-photonav
  Description: Provides a scrolling field without scrollbars for huge pictures.
  Especially useful for panorama pictures.
- Version: 1.2.1
+ Version: 1.2.2
  Author: Fabian Stanke
  Author URI: http://fmos.at
  License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -21,23 +21,8 @@ if ( ! class_exists( "PhotoNav" ) ) {
 		}
 
 		function admin_init() {
-			add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_resources' ) );
-			add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 			add_filter( 'mce_external_plugins', array( $this, 'register_tinymce_plugin' ) );
 			add_filter( 'mce_buttons', array( $this, 'register_tinymce_button' ) );
-			add_filter( 'mce_external_languages', array( $this, 'tinymce_plugin_add_locale' ) );
-		}
-
-		// Register custom media uploader for post editor
-		function register_admin_resources( $hook ) {
-			if( 'post.php' !== $hook )
-				return;
-			wp_enqueue_script( 'wp-photonav-uploader', plugins_url( 'uploader.js', __FILE__ ) );
-			wp_enqueue_style( 'wp-photonav-uploader', plugins_url( 'uploader.css', __FILE__ ) );
-		}
-
-		function load_textdomain() {
-			load_plugin_textdomain( 'wp-photonav', false, dirname( plugin_basename( __FILE__ ) ) );
 		}
 
 		function register_tinymce_plugin( $plugin_array ) {
@@ -50,11 +35,6 @@ if ( ! class_exists( "PhotoNav" ) ) {
 			return $buttons;
 		}
 
-		function tinymce_plugin_add_locale( $locales ) {
-			$locales['photonav'] = plugins_url( 'tinymce-plugin-langs.php', __FILE__ );
-			return $locales;
-		}
-
 		function init() {
 			add_action( 'wp_enqueue_scripts', array( $this, 'register_resources' ) );
 			add_shortcode( 'photonav', array( $this, 'parse_shortcode' ) );
@@ -63,7 +43,7 @@ if ( ! class_exists( "PhotoNav" ) ) {
 		// Registers the custom JavaScript and CSS
 		function register_resources() {
 			wp_register_script( 'jquery-photonav', plugins_url( 'jquery.photonav.js', __FILE__ ),
-				array( 'jquery', 'jquery-ui-draggable', 'jquery-touch-punch' ), '1.2.0' );
+				array( 'jquery', 'jquery-ui-draggable', 'jquery-touch-punch' ), '1.2.1' );
 			wp_register_style( 'wp-photonav', plugins_url( 'wp-photonav.css', __FILE__ ),
 				array(), '1.2.0' );
 			wp_enqueue_script( 'jquery-photonav' );
