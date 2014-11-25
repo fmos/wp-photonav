@@ -101,11 +101,13 @@
 					});
 					// Return a callback that gets called when the image is loaded
 					return function() {
-						var co = container.offset();
-						content.draggable(
-							'option',
-							'containment',
-							[ co.left + cw - iw, co.top + ch - ih, co.left, co.top ] );
+						container.mousedown(function(){
+							var co = container.offset();
+							content.draggable(
+								'option',
+								'containment',
+								[ co.left + cw - iw, co.top + ch - ih, co.left, co.top ] );
+						});
 					}
 				}
 
@@ -123,12 +125,15 @@
 					});
 					// Return a callback that gets called when the image is loaded
 					return function() {
-						var co = container.offset();
 						content.css( 'width', iw + cw + 2 ); // for 360 mode, the dragable content is enlarged
-						content.draggable(
-							'option',
-							'containment',
-							[ , co.top + ch - ih, , co.top ] );
+						
+						container.mousedown(function(){
+							var co = container.offset();
+							content.draggable(
+								'option',
+								'containment',
+								[ , co.top + ch - ih, , co.top ] );
+						});	
 					}
 				}
 
@@ -203,7 +208,7 @@
 						content.css({
 							left: '',
 							top: '',
-							width: '',
+							width: ''
 						});
 						is_fullview = true;
 					});
@@ -218,7 +223,7 @@
 					}
 					content.css({
 						left: leftStart,
-						top: Math.min( 0, ( ch - ih ) / 2 ),
+						top: Math.min( 0, ( ch - ih ) / 2 )
 					});
 					if ( callback !== undefined ) {
 						callback();
