@@ -183,7 +183,6 @@
 								}
 							} );
 					});
-					console.log("leftEnd: "+leftEnd+" leftStart: "+leftStart+" result: "+Math.abs( leftEnd - leftStart ));
 				}
 
 				function initZoom() {

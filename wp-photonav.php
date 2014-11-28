@@ -159,3 +159,4 @@ PHOTONAVTEMPLATE;
 if ( class_exists( 'PhotoNav' ) ) {
 	$photonav = new PhotoNav();
 }
+
