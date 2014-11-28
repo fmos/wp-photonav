@@ -37,6 +37,7 @@
 			mode: 'move',
 			popup: 'none',
 			animate: 'none',
+			speed: 1,
 			position: 'center',
 			label: 'none',
 		};
@@ -150,7 +151,7 @@
 						content.animate( {
 								left: leftEnd
 							},
-							10 * Math.abs( iw ),
+							10/photonav.config.speed * Math.abs( iw ),
 							'linear',
 							function() {
 								setTimeout( function() {
@@ -174,7 +175,7 @@
 						$( this ).animate( {
 								left: leftEnd
 							},
-							10 * Math.abs( leftEnd - leftStart ),
+							10/photonav.config.speed * Math.abs( leftEnd - leftStart ),
 							'linear',
 							function() {
 								if ( turnLoop ) {
@@ -182,6 +183,7 @@
 								}
 							} );
 					});
+					console.log("leftEnd: "+leftEnd+" leftStart: "+leftStart+" result: "+Math.abs( leftEnd - leftStart ));
 				}
 
 				function initZoom() {
@@ -208,7 +210,7 @@
 						content.css({
 							left: '',
 							top: '',
-							width: ''
+							width: '',
 						});
 						is_fullview = true;
 					});
@@ -223,7 +225,7 @@
 					}
 					content.css({
 						left: leftStart,
-						top: Math.min( 0, ( ch - ih ) / 2 )
+						top: Math.min( 0, ( ch - ih ) / 2 ),
 					});
 					if ( callback !== undefined ) {
 						callback();
@@ -337,6 +339,10 @@
 					}, function() {
 						$( label ).fadeTo( 'fast', 1.0 );
 					});
+				}
+				
+				if( 'number' !== typeof config.speed || config.speed <= 0) {
+					config.speed = 1;
 				}
 			};
 		};

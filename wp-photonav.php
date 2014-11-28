@@ -62,6 +62,7 @@ if ( ! class_exists( "PhotoNav" ) ) {
 				'animate' => 'none',            // 0.7
 				'position' => 'center',         // 1.1
 				'label' => 'none',              // 1.1
+				'speed' => 1,					// 1.2.2
 			);
 			$a = shortcode_atts( $defaults, $atts );
 			$id = $this->get_unique_id();
@@ -102,6 +103,9 @@ if ( ! class_exists( "PhotoNav" ) ) {
 					$a['animate'] = 'right';
 				}
 			}
+			if ( ! is_numeric( $a['speed'] ) || $a['speed'] <= 0 ) {
+				$a['speed'] = 1;
+			}
 			$valid_positions = array( 'left', 'center', 'right' );
 			if ( ! in_array( $a['position'], $valid_positions ) ) {
 				if ( ! is_numeric( $a['position'] ) ) {
@@ -127,7 +131,7 @@ if ( ! class_exists( "PhotoNav" ) ) {
 			</div>
 		</div>
 	</div>
-	<script type="text/javascript">jQuery(document).ready(function(){jQuery("#%PHOTONAV_ID%").photoNav({id:"%PHOTONAV_ID%",mode:"%PHOTONAV_MODE%",popup:"%PHOTONAV_POPUP%",animate:"%PHOTONAV_ANIMATE%",position:"%PHOTONAV_POSITION%",label:"%PHOTONAV_LABEL%"});});</script>
+	<script type="text/javascript">jQuery(document).ready(function(){jQuery("#%PHOTONAV_ID%").photoNav({id:"%PHOTONAV_ID%",mode:"%PHOTONAV_MODE%",popup:"%PHOTONAV_POPUP%",animate:"%PHOTONAV_ANIMATE%",speed:%PHOTONAV_SPEED%,position:"%PHOTONAV_POSITION%",label:"%PHOTONAV_LABEL%"});});</script>
 </div>
 PHOTONAVTEMPLATE;
 			$photonav_insert = str_replace( '%PHOTONAV_ID%', $id, $photonav_insert );
@@ -137,6 +141,7 @@ PHOTONAVTEMPLATE;
 			$photonav_insert = str_replace( '%PHOTONAV_CONTAINERHEIGHT%', $a['container_height'], $photonav_insert );
 			$photonav_insert = str_replace( '%PHOTONAV_POPUP%', $a['popup'], $photonav_insert );
 			$photonav_insert = str_replace( '%PHOTONAV_ANIMATE%', $a['animate'], $photonav_insert );
+			$photonav_insert = str_replace( '%PHOTONAV_SPEED%', $a['speed'], $photonav_insert );
 			$photonav_insert = str_replace( '%PHOTONAV_POSITION%', $a['position'], $photonav_insert );
 			$photonav_insert = str_replace( '%PHOTONAV_LABEL%', $a['label'], $photonav_insert );
 			return $photonav_insert;
@@ -154,5 +159,3 @@ PHOTONAVTEMPLATE;
 if ( class_exists( 'PhotoNav' ) ) {
 	$photonav = new PhotoNav();
 }
-
-?>
