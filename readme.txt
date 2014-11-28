@@ -1,5 +1,5 @@
 === WP-PhotoNav ===
-Contributors: fmos, NoSta
+Contributors: fmos, NoSta, artjomsimon
 Donate link:
 Tags: panorama, image, photo, picture, photonav, jquery, scroll, 360, colorbox, autoscroll
 Requires at least: 2.8
@@ -29,6 +29,10 @@ Further reading:
 4. Include PhotoNav in your post by entering `[photonav url='/wp-content/uploads/2010/08/panorama.jpg']`.
 
 == Changelog ==
+
+= 1.3.0 ?
+* Feature: Introduced speed parameter (thanks to @artjomsimon)
+* Bugfix: Recalculate draggable containment before drag
 
 = 1.2.2 =
 * Bugfix: Removed orphaned resource hooks, thanks mydiskdriveonline
